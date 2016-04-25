@@ -1,4 +1,4 @@
-package tech.synframe.template;
+package tech.synframe.systemcontrol;
 
 import com.synload.framework.Log;
 import com.synload.framework.modules.ModuleClass;

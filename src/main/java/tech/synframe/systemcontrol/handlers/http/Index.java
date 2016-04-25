@@ -1,4 +1,4 @@
-package tech.synframe.template.handlers.http;
+package tech.synframe.systemcontrol.handlers.http;
 
 import java.io.IOException;
 
@@ -6,7 +6,6 @@ import com.synload.framework.Log;
 import com.synload.framework.http.HttpRequest;
 import com.synload.framework.http.annotations.Get;
 import com.synload.framework.http.annotations.MimeType;
-import com.synload.framework.http.annotations.Post;
 import com.synload.framework.modules.ModuleLoader;
 
 /*

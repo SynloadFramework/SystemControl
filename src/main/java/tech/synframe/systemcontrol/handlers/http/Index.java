@@ -15,9 +15,9 @@ public class Index {
 	@Get("/") // HTTP get annotation ( registers as get request http://yoursite.com:8080/template )
 	@MimeType("text/html") // returns OK from server and the mimetype content type
 	public void gHtml(HttpRequest hr){
-		hr.getResponse().setContentLength(ModuleLoader.resources.get("systemcontrol").get("index.html").length);
+		hr.getResponse().setContentLength(ModuleLoader.resources.get("systemcontrol").get("templates/main.html").length);
 		try {
-			hr.getResponse().getOutputStream().write(ModuleLoader.resources.get("systemcontrol").get("index.html"));
+			hr.getResponse().getOutputStream().write(ModuleLoader.resources.get("systemcontrol").get("templates/main.html"));
 		} catch (IOException e) {
 			Log.info(e.getMessage(), Index.class);
 		}

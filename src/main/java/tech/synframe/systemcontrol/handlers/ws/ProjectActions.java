@@ -69,4 +69,25 @@ public class ProjectActions {
             Log.info("Not logged in", ProjectActions.class);
         }
     }
+    @WSEvent(method = "delete", action = "project", description = "Delete a project by id", enabled = true, name = "DeleteProject")
+    public void deleteProject(RequestEvent e){
+        if(
+            e.getSession().getSessionData().containsKey("user") &&
+            e.getRequest().getData().containsKey("id")
+        ){
+            User u = (User) e.getSession().getSessionData().get("user");
+            int id = Integer.valueOf(e.getRequest().getData().get("id"));
+            try{
+                final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
+                if(project.size()>0) {
+                    u._unset(project.get(0));
+                    project.get(0)._delete();
+                }
+            }catch (Exception err){
+            }
+        }else{
+            Log.info("Not logged in", ProjectActions.class);
+        }
+    }
+
 }

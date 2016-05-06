@@ -38,6 +38,5 @@ public class GetPendingActions extends Response {
         this.setParentTemplate("index"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)
         this.setAction("alone"); // how to transition the element to the new content
         this.setPageId("getPendingActions");
-        this.setPageTitle("Pending Actions Notifications");
     }
 }

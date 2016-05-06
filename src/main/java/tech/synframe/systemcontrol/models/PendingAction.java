@@ -7,6 +7,8 @@ import com.synload.framework.modules.annotations.sql.SQLTable;
 import com.synload.framework.modules.annotations.sql.StringColumn;
 import com.synload.framework.sql.Model;
 
+import java.sql.ResultSet;
+
 /**
  * Created by Nathaniel on 5/5/2016.
  */
@@ -14,6 +16,13 @@ import com.synload.framework.sql.Model;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
 @SQLTable(name = "pending Action", version = 0.1, description = "pending actions for projects")
 public class PendingAction extends Model{
+    public PendingAction(ResultSet rs) {
+        super(rs);
+    }
+
+    public PendingAction(Object... data) {
+        super(data);
+    }
     @MediumIntegerColumn(length = 20, Key = true, AutoIncrement = true)
     public long id;
 

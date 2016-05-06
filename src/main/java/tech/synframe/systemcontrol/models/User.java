@@ -7,6 +7,7 @@ import com.synload.framework.sql.Model;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
 
 /**
  * Created by Nathaniel on 5/5/2016.
@@ -15,6 +16,15 @@ import java.security.NoSuchAlgorithmException;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
 @SQLTable(name = "User Model", version = 0.1, description = "users table contains passwords and emails")
 public class User extends Model {
+
+    public User(ResultSet rs) {
+        super(rs);
+    }
+
+    public User(Object... data) {
+        super(data);
+    }
+
     @MediumIntegerColumn(length = 20, Key = true, AutoIncrement = true)
     public long id;
 

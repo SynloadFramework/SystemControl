@@ -14,6 +14,9 @@ jar {
 repositories {
     mavenCentral()
     maven {
+        url "http://ci.synload.com/plugin/repository/everything/"
+    }
+    maven {
        url "http://ci.synload.com/job/SynloadFramework/ws/build/repo/"
     }
 }

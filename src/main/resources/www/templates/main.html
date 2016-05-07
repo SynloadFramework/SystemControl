@@ -43,7 +43,7 @@
     <script type="text/javascript" src="/synloadframework/js/synframe.js"></script>
     <script type="text/javascript">
             $(document).ready(function(){
-                connect("synload.com:8081",function(){
+                connect(location.hostname+(location.port ? ':'+location.port: ''),function(){
                     _sf.request('get','index');
                 });
             });

@@ -1,5 +1,7 @@
 package tech.synframe.systemcontrol.utils;
 
+import tech.synframe.systemcontrol.models.Project;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -9,18 +11,14 @@ import java.util.Map;
  * Created by Nathaniel on 5/2/2016.
  */
 public class ExecuteShellSynFrame implements Runnable{
-    public String instance;
-    public String directory;
-    public String port;
+    public Project project;
     public Process p;
     public StringBuffer output = new StringBuffer();
-    public static Map<String, ExecuteShellSynFrame> instances = new HashMap<String, ExecuteShellSynFrame>();
-    public ExecuteShellSynFrame(String instance, String directory, String port){
-        this.instance = instance;
-        this.port = port;
-        this.directory = directory;
+    public static Map<Long, ExecuteShellSynFrame> instances = new HashMap<Long, ExecuteShellSynFrame>();
+    public ExecuteShellSynFrame(Project project){
+        this.project = project;
     }
-    boolean isRunning() {
+    public boolean isRunning() {
         try {
             p.exitValue();
             return false;
@@ -28,10 +26,13 @@ public class ExecuteShellSynFrame implements Runnable{
             return true;
         }
     }
+    public void stop(){
+        p.destroy();
+    }
     public void run(){
-        instances.put(this.instance, this);
+        instances.put(this.project.getId(), this);
         try {
-            p = Runtime.getRuntime().exec("./bin/SynloadFramework -sitepath "+directory+" -port "+port);
+            p = Runtime.getRuntime().exec("./bin/SynloadFramework -sitepath "+this.project.getPath()+" -port "+this.project.getPort());
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while(this.isRunning()) {
                 String line = "";
@@ -42,6 +43,6 @@ public class ExecuteShellSynFrame implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        instances.remove(this.instance);
+        instances.remove(this.project.getId());
     }
 }

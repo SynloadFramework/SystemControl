@@ -36,6 +36,24 @@
                     console.log('connected');
                 });
             });
+            function login(){
+                _sf.request('post','login',{
+                    "email":$('input[name="emailLogin"]').val(),
+                    "password":$('input[name="passwordLogin"]').val()
+                });
+            }
+            function register(){
+                _sf.request('post','register',{
+                    "email":$('input[name="emailRegister"]').val(),
+                    "password":$('input[name="passwordRegister"]').val(),
+                    "country":$('input[name="countryRegister"]').val(),
+                });
+                $(".register-form").hide();
+                $(".login-form").hide();
+            }
+            function login(){
+                _sf.requestSingle('post','logout');
+            }
         </script>
     </head>
     <body>

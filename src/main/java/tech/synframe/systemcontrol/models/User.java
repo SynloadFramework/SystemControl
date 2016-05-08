@@ -14,7 +14,7 @@ import java.sql.ResultSet;
  */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
-@SQLTable(name = "User Model", version = 0.1, description = "users table contains passwords and emails")
+@SQLTable(name = "User Model", version = 0.2, description = "users table contains passwords and emails")
 public class User extends Model {
 
     public User(ResultSet rs) {
@@ -39,6 +39,9 @@ public class User extends Model {
     @LongBlobColumn()
     @HasMany(of=Project.class, key="id")
     public String projects;
+
+    @StringColumn(length = 2)
+    public String country;
 
     public static String hash(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -75,5 +78,21 @@ public class User extends Model {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProjects() {
+        return projects;
+    }
+
+    public void setProjects(String projects) {
+        this.projects = projects;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

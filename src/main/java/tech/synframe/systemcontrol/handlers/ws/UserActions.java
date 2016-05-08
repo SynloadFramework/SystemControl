@@ -3,6 +3,7 @@ package tech.synframe.systemcontrol.handlers.ws;
 import com.synload.eventsystem.EventPublisher;
 import com.synload.eventsystem.events.RequestEvent;
 import com.synload.framework.ws.annotations.WSEvent;
+import tech.synframe.systemcontrol.elements.PageWrapper;
 import tech.synframe.systemcontrol.elements.user.LoginForm;
 import tech.synframe.systemcontrol.events.UserLoggedIn;
 import tech.synframe.systemcontrol.models.User;
@@ -28,7 +29,7 @@ public class UserActions {
                     User u = users.get(0);
                     if(User.hash(password).equals(u.getPassword())){
                         e.getSession().getSessionData().put("user", u);
-                        EventPublisher.raiseEvent(new UserLoggedIn(e.getSession(), u), true, null);
+                        EventPublisher.raiseEvent(new UserLoggedIn(e.getSession(), u, e.getRequest()), true, null);
                     }else{
                         // failed to login, password incorrect
                     }
@@ -38,6 +39,41 @@ public class UserActions {
             }catch(Exception err){
 
             }
+        }
+    }
+    @WSEvent(method = "post", action = "register", description = "create new user", enabled = true, name = "InitiateRegister")
+    public void register(RequestEvent e){
+        if(e.getRequest().getData().containsKey("email") && e.getRequest().getData().containsKey("password") && e.getRequest().getData().containsKey("country")){
+            String email = e.getRequest().getData().get("email");
+            String password = e.getRequest().getData().get("password");
+            String country = e.getRequest().getData().get("country");
+            try {
+                User user = new User();
+                user.setEmail(email);
+                user.setPassword(User.hash(password));
+                user.setCountry(country);
+                user._insert();
+                if(user.getId()>0){
+                    e.getSession().getSessionData().put("user", user);
+                    EventPublisher.raiseEvent(new UserLoggedIn(e.getSession(), user, e.getRequest()), true, null);
+                }else{
+                    // failed to login user not found
+                }
+            }catch(Exception err){
+
+            }
+        }
+    }
+    @WSEvent(method = "post", action = "register", description = "create new user", enabled = true, name = "InitiateRegister")
+    public void logout(RequestEvent e){
+        if(e.getSession().getSessionData().containsKey("user")){ // logged in?
+            e.getSession().getSessionData().remove("user");
+            e.getSession().send(
+                new LoginForm(
+                    e.getSession(),
+                    e.getRequest().getTemplateCache()
+                )
+            );
         }
     }
 }

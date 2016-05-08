@@ -32,7 +32,8 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 connect(location.hostname+(location.port ? ':'+location.port: ''),function(sf){
-                    sf.request('get','index');
+                    sf.requestSingle('get','index');
+                    console.log('connected');
                 });
             });
         </script>

@@ -64,7 +64,7 @@ public class UserActions {
             }
         }
     }
-    @WSEvent(method = "post", action = "register", description = "create new user", enabled = true, name = "InitiateRegister")
+    @WSEvent(method = "post", action = "logout", description = "logout of a session", enabled = true, name = "InitiateLogout")
     public void logout(RequestEvent e){
         if(e.getSession().getSessionData().containsKey("user")){ // logged in?
             e.getSession().getSessionData().remove("user");

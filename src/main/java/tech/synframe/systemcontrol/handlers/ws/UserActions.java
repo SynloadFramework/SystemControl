@@ -22,6 +22,7 @@ public class UserActions {
     }
     @WSEvent(method = "post", action = "login", description = "initiate login", enabled = true, name = "InitiateLogin")
     public void login(RequestEvent e){
+        HashMap<String, Object> feedback = new HashMap<String, Object>();
         if(e.getRequest().getData().containsKey("email") && e.getRequest().getData().containsKey("password")){
             String email = e.getRequest().getData().get("email");
             String password = e.getRequest().getData().get("password");
@@ -31,38 +32,31 @@ public class UserActions {
                     final User u = users.get(0);
                     if(User.hash(password).equals(u.getPassword())){
                         e.getSession().getSessionData().put("user", u);
-                        e.getSession().send(new Data(new HashMap<String, Object>() {{
-                            put("message", "Welcome back, <br/><center>"+u.getEmail()+"</center>");
-                            put("status", "success");
-                        }}, "login_feedback"));
+                        feedback.put("message", "Welcome back, <br/><center>"+u.getEmail()+"</center>");
+                        feedback.put("status", "success");
                         EventPublisher.raiseEvent(new UserLoggedIn(e.getSession(), u, e.getRequest()), true, null);
                     }else{
-                        e.getSession().send(new Data(new HashMap<String, Object>() {{
-                            put("message", "Password Incorrect");
-                            put("status", "error");
-                        }}, "login_feedback"));
+                        feedback.put("message", "Password Incorrect");
+                        feedback.put("status", "error");
                     }
                 }else{
-                    e.getSession().send(new Data(new HashMap<String, Object>() {{
-                        put("message", "User does not exist");
-                        put("status", "error");
-                    }}, "login_feedback"));
+                    feedback.put("message", "User does not exist");
+                    feedback.put("status", "error");
                 }
             }catch(Exception err){
-                e.getSession().send(new Data(new HashMap<String, Object>() {{
-                    put("message", "System failure, exception thrown");
-                    put("status", "error");
-                }}, "login_feedback"));
+                err.printStackTrace();
+                feedback.put("message", "System failure, exception thrown");
+                feedback.put("status", "error");
             }
         }else{
-            e.getSession().send(new Data(new HashMap<String, Object>() {{
-                put("message", "Make sure to fill out the form");
-                put("status", "error");
-            }}, "login_feedback"));
+            feedback.put("message", "Make sure to fill out the form");
+            feedback.put("status", "error");
         }
+        e.getSession().send(new Data(feedback, "login_feedback"));
     }
     @WSEvent(method = "post", action = "register", description = "create new user", enabled = true, name = "InitiateRegister")
     public void register(RequestEvent e){
+        HashMap<String, Object> feedback = new HashMap<String, Object>();
         if(e.getRequest().getData().containsKey("email") && e.getRequest().getData().containsKey("password") && e.getRequest().getData().containsKey("country")){
             String email = e.getRequest().getData().get("email");
             String password = e.getRequest().getData().get("password");
@@ -78,10 +72,8 @@ public class UserActions {
                         user.setProjects("");
                         user._insert();
                         if (user.getId() > 0) {
-                            e.getSession().send(new Data(new HashMap<String, Object>() {{
-                                put("message", "Account created, redirecting to login.");
-                                put("status", "success");
-                            }}, "register_feedback"));
+                            feedback.put("message", "Account created, redirecting to login.");
+                            feedback.put("status", "success");
                             e.getSession().send(
                                 new LoginForm(
                                     e.getSession(),
@@ -89,32 +81,26 @@ public class UserActions {
                                 )
                             );
                         } else {
-                            e.getSession().send(new Data(new HashMap<String, Object>() {{
-                                put("message", "System failure");
-                                put("status", "error");
-                            }}, "register_feedback"));
+                            feedback.put("message", "System failure");
+                            feedback.put("status", "error");
                         }
                     } catch (Exception err) {
-
+                        err.printStackTrace();
                     }
                 }else{
-                    e.getSession().send(new Data(new HashMap<String, Object>() {{
-                        put("message", "Email exists");
-                        put("status", "error");
-                    }}, "register_feedback"));
+                    feedback.put("message", "Email exists");
+                    feedback.put("status", "error");
                 }
             } catch (Exception err) {
-                e.getSession().send(new Data(new HashMap<String, Object>() {{
-                    put("message", "System failure, exception thrown");
-                    put("status", "error");
-                }}, "register_feedback"));
+                err.printStackTrace();
+                feedback.put("message", "System failure, exception thrown");
+                feedback.put("status", "error");
             }
         }else{
-            e.getSession().send(new Data(new HashMap<String, Object>() {{
-                put("message", "Fill out the form!");
-                put("status", "error");
-            }}, "register_feedback"));
+            feedback.put("message", "Fill out the form!");
+            feedback.put("status", "error");
         }
+        e.getSession().send(new Data(feedback, "register_feedback"));
     }
     @WSEvent(method = "post", action = "logout", description = "logout of a session", enabled = true, name = "InitiateLogout")
     public void logout(RequestEvent e){

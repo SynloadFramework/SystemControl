@@ -1,5 +1,6 @@
 package tech.synframe.systemcontrol.response;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.synload.framework.handlers.CallEvent;
 
 import java.util.HashMap;
@@ -7,14 +8,21 @@ import java.util.HashMap;
 /**
  * Created by Nathaniel on 5/8/2016.
  */
-public class CallBackData extends CallEvent {
-    HashMap<String, Object> feedback;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
+public class CallBackData {
+    public String callEvent;
+    public HashMap<String, Object> feedback;
     public CallBackData(HashMap<String, Object> feedback, String event){
-        this.event = event;
+        this.callEvent = event;
         this.feedback = new HashMap<String, Object>(feedback);
     }
 
     public HashMap<String, Object> getFeedback() {
         return feedback;
+    }
+
+    public String getCallEvent() {
+        return callEvent;
     }
 }

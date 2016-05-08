@@ -25,7 +25,7 @@ public class PageWrapper extends Response {
                 e.printStackTrace();
             }
         }
-        this.setParent("html"); // parent element, css selector
+        this.setParent("body"); // parent element, css selector
         this.setParentTemplate("index"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)
         this.setAction("alone"); // how to transition the element to the new content
         this.setPageId("systemControl");

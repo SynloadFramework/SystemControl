@@ -44,10 +44,10 @@
                 connect( location.hostname+(location.port ? ':'+location.port: ''), function(sf){
                     sf.requestSingle('get','index');
                     sf.addCall(function(sf, ws, data){
-                        $(".registerheader").after(status(data.feedback));
+                        $(".loginheader").after(status(data.feedback));
                     },"login_feedback");
                     sf.addCall(function(sf, ws, data){
-                        $(".loginheader").after(status(data.feedback));
+                        $(".registerheader").after(status(data.feedback));
                     },"register_feedback");
                     console.log('connected');
                 });

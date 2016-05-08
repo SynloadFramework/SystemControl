@@ -30,14 +30,24 @@
         <script type="text/javascript" src="/synloadframework/js/Markup.js"></script>
         <script type="text/javascript" src="/synloadframework/js/synframe.js"></script>
         <script type="text/javascript">
+            function status(feedback){
+                var html = '<div class="alert alert-';
+                html = html + ((feedback.status=="success")?'success':'');
+                html = html + ((feedback.status=="error")?'danger':'');
+                html = html + '">';
+                html = html + '<button class="close" data-close="alert"></button>';
+                html = html + '<span> '+feedback.message+' </span>';
+                html = html + '</div>';
+                return html;
+            }
             $(document).ready(function(){
                 connect( location.hostname+(location.port ? ':'+location.port: ''), function(sf){
                     sf.requestSingle('get','index');
                     sf.addCall(function(sf, ws, data){
-                        console.log(data);
+                        $(".registerheader").after(status(data.feedback));
                     },"login_feedback");
                     sf.addCall(function(sf, ws, data){
-                        console.log(data);
+                        $(".loginheader").after(status(data.feedback));
                     },"register_feedback");
                     console.log('connected');
                 });

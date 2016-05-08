@@ -64,8 +64,6 @@
                     "password":$('input[name="passwordRegister"]').val(),
                     "country":$('input[name="countryRegister"]').val(),
                 });
-                $(".register-form").hide();
-                $(".login-form").hide();
             }
             function logout(){
                 _sf.requestSingle('post','logout');

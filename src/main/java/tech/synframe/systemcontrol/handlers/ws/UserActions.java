@@ -2,12 +2,14 @@ package tech.synframe.systemcontrol.handlers.ws;
 
 import com.synload.eventsystem.EventPublisher;
 import com.synload.eventsystem.events.RequestEvent;
+import com.synload.framework.SynloadFramework;
 import com.synload.framework.handlers.Data;
 import com.synload.framework.ws.annotations.WSEvent;
 import tech.synframe.systemcontrol.elements.PageWrapper;
 import tech.synframe.systemcontrol.elements.user.LoginForm;
 import tech.synframe.systemcontrol.events.UserLoggedIn;
 import tech.synframe.systemcontrol.models.User;
+import tech.synframe.systemcontrol.response.CallBackData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +54,11 @@ public class UserActions {
             feedback.put("message", "Make sure to fill out the form");
             feedback.put("status", "error");
         }
-        e.getSession().send(new Data(feedback, "login_feedback"));
+        try {
+            e.getSession().send(SynloadFramework.ow.writeValueAsString(new CallBackData(feedback, "login_feedback")));
+        }catch (Exception err){
+            err.printStackTrace();
+        }
     }
     @WSEvent(method = "post", action = "register", description = "create new user", enabled = true, name = "InitiateRegister")
     public void register(RequestEvent e){
@@ -100,7 +106,11 @@ public class UserActions {
             feedback.put("message", "Fill out the form!");
             feedback.put("status", "error");
         }
-        e.getSession().send(new Data(feedback, "register_feedback"));
+        try {
+            e.getSession().send(SynloadFramework.ow.writeValueAsString(new CallBackData(feedback, "register_feedback")));
+        }catch (Exception err){
+            err.printStackTrace();
+        }
     }
     @WSEvent(method = "post", action = "logout", description = "logout of a session", enabled = true, name = "InitiateLogout")
     public void logout(RequestEvent e){

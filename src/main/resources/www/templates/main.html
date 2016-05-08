@@ -30,7 +30,7 @@
         <script type="text/javascript" src="/synloadframework/js/Markup.js"></script>
         <script type="text/javascript" src="/synloadframework/js/synframe.js"></script>
         <script type="text/javascript">
-            $(document).ready(function(){
+            $(document).load(function(){
                 connect( location.hostname+(location.port ? ':'+location.port: ''), function(sf){
                     sf.requestSingle('get','index');
                     console.log('connected');

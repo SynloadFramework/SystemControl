@@ -33,6 +33,12 @@
             $(document).ready(function(){
                 connect( location.hostname+(location.port ? ':'+location.port: ''), function(sf){
                     sf.requestSingle('get','index');
+                    sf.addCall(function(sf, ws, data){
+                        console.log(data);
+                    },"login_feedback");
+                    sf.addCall(function(sf, ws, data){
+                        console.log(data);
+                    },"register_feedback");
                     console.log('connected');
                 });
             });

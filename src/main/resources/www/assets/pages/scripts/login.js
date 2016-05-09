@@ -157,31 +157,17 @@ var Login = function() {
             focusInvalid: false, // do not focus the last invalid input
             ignore: "",
             rules: {
-
-                fullname: {
-                    required: true
-                },
-                email: {
+                emailRegister: {
                     required: true,
                     email: true
                 },
-                address: {
+                countryRegister: {
                     required: true
                 },
-                city: {
+                passwordRegister: {
                     required: true
                 },
-                country: {
-                    required: true
-                },
-
-                username: {
-                    required: true
-                },
-                password: {
-                    required: true
-                },
-                rpassword: {
+                rpasswordRegister: {
                     equalTo: "#register_password"
                 },
 

@@ -167,7 +167,7 @@ var Login = function() {
                 passwordRegister: {
                     required: true
                 },
-                rpasswordRegister: {
+                rpassword: {
                     equalTo: "#register_password"
                 },
 

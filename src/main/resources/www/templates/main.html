@@ -62,7 +62,7 @@
                 _sf.request('post','register',{
                     "email":$('input[name="emailRegister"]').val(),
                     "password":$('input[name="passwordRegister"]').val(),
-                    "country":$('input[name="countryRegister"]').val(),
+                    "country":$('select[name="countryRegister"]').val(),
                 });
             }
             function logout(){

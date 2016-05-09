@@ -1,6 +1,8 @@
 package tech.synframe.systemcontrol.events;
 
 import com.synload.eventsystem.EventClass;
+import com.synload.eventsystem.Handler;
+import com.synload.eventsystem.Type;
 import com.synload.framework.handlers.Request;
 import com.synload.framework.ws.WSHandler;
 import tech.synframe.systemcontrol.models.User;
@@ -16,6 +18,8 @@ public class UserLoggedIn extends EventClass{
         this.user = u;
         this.session = session;
         this.request = request;
+        this.setHandler(Handler.EVENT);
+        this.setType(Type.OTHER);
     }
 
     public User getUser() {

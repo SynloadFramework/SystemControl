@@ -171,9 +171,4 @@ var Demo = function () {
     };
 
 }();
-
-if (App.isAngularJsApp() === false) {
-    jQuery(document).ready(function() {   
-        Demo.init();
-    });
-} 
+Demo.init();

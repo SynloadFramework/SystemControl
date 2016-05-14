@@ -2,6 +2,7 @@ package tech.synframe.systemcontrol.elements;
 
 import com.synload.framework.handlers.Response;
 import com.synload.framework.modules.ModuleLoader;
+import com.synload.framework.modules.ModuleResource;
 import com.synload.framework.ws.WSHandler;
 import tech.synframe.systemcontrol.handlers.ws.PendingActions;
 import tech.synframe.systemcontrol.models.PendingAction;
@@ -29,7 +30,7 @@ public class GetPendingActions extends Response {
         this.setTemplateId("gpa-sc"); // set the template id (stored client side)
         if(!templateCache.contains(this.getTemplateId())){ // check to see if the client has this template
             try {
-                this.setTemplate(this.getTemplate(new String(ModuleLoader.resources.get("systemcontrol").get("templates/actions/pendingactions.html"),"UTF-8"))); // retrieve template from memory
+                this.setTemplate(this.getTemplate(new String(ModuleResource.get("systemcontrol","templates/actions/pendingactions.html"),"UTF-8"))); // retrieve template from memory
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

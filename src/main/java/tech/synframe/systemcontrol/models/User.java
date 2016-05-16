@@ -28,7 +28,6 @@ public class User extends Model {
     @MediumIntegerColumn(length = 20, Key = true, AutoIncrement = true)
     public long id;
 
-    @JsonIgnore
     @StringColumn(length = 128)
     public String email;
 

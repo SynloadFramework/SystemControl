@@ -11,7 +11,7 @@ import java.sql.ResultSet;
  */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
-@SQLTable(name = "Project Model", version = 0.1, description = "Instances of synframe projects")
+@SQLTable(name = "Project Model", version = 0.1, description = "Instances of synframe project")
 public class Project extends Model{
     public Project(ResultSet rs) {
         super(rs);

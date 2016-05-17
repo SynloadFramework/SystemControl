@@ -25,7 +25,7 @@ public class CreateProjectPage extends Response {
                 e.printStackTrace();
             }
         }
-        this.setParent(".content-wrapper"); // parent element, css selector
+        this.setParent(".project-wrapper"); // parent element, css selector
         this.setParentTemplate("wrapper"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)
         this.setAction("alone"); // how to transition the element to the new content
         this.setPageId("createProject");

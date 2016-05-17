@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class CreateProjectPage extends Response {
     public User user;
+    public List<Project> projects = new ArrayList<Project>();
     public CreateProjectPage(WSHandler session, List<String> templateCache, User u){
         this.user = u;
         this.setTemplateId("projcrea-sc"); // set the template id (stored client side)
@@ -24,6 +25,11 @@ public class CreateProjectPage extends Response {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+        }
+        try {
+            projects = user._related(Project.class).exec(Project.class);
+        }catch(Exception e){
+            e.printStackTrace();
         }
         this.setParent(".project-wrapper"); // parent element, css selector
         this.setParentTemplate("wrapper"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)

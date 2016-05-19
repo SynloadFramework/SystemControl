@@ -16,12 +16,12 @@ public class ProjectElementWSEvents {
     @WSEvent(name="CreateProject", description="", enabled = true, method = "get", action = "createproject")
     public void createProject(RequestEvent e){
         if(e.getSession().getSessionData().containsKey("user")){
-            e.getSession().send(
-                    new CreateProjectPage(
-                            e.getSession(),
-                            e.getRequest().getTemplateCache(),
-                            (User) e.getSession().getSessionData().get("user")
-                    )
+            e.respond(
+                new CreateProjectPage(
+                    e.getSession(),
+                    e.getRequest().getTemplateCache(),
+                    (User) e.getSession().getSessionData().get("user")
+                )
             );
         }
     }

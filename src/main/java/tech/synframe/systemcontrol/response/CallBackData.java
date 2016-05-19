@@ -2,6 +2,7 @@ package tech.synframe.systemcontrol.response;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.synload.framework.handlers.CallEvent;
+import com.synload.framework.handlers.Data;
 
 import java.util.HashMap;
 
@@ -10,10 +11,11 @@ import java.util.HashMap;
  */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
-public class CallBackData {
+public class CallBackData extends Data{
     public String callEvent;
     public HashMap<String, Object> feedback;
     public CallBackData(HashMap<String, Object> feedback, String event){
+        super(null, null);
         this.callEvent = event;
         this.feedback = new HashMap<String, Object>(feedback);
     }

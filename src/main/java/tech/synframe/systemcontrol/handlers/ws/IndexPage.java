@@ -21,7 +21,7 @@ public class IndexPage {
 				)
 			);
 		}else{ // not logged in
-			e.getSession().send(
+			e.respond(
 				new LoginForm(
 					e.getSession(),
 					e.getRequest().getTemplateCache()

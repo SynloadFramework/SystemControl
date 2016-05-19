@@ -15,7 +15,7 @@ public class PendingActions {
     public void display(RequestEvent e){
         if(e.getSession().getSessionData().containsKey("user")){
             User u = (User)e.getSession().getSessionData().get("user");
-            e.getSession().send(
+            e.respond(
                 new GetPendingActions(
                     e.getSession(),
                     e.getRequest().getTemplateCache(),

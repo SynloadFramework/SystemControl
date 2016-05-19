@@ -54,7 +54,7 @@ public class ProjectActions {
             try{
                 final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
                 if(project.size()>0) {
-                    e.getSession().send(
+                    e.respond(
                         new Data(
                             new HashMap<String, Object>() {{
                                 put("project", project.get(0));
@@ -118,7 +118,7 @@ public class ProjectActions {
                     objects.put("status", false);
                     objects.put("project", false);
                 }
-                e.getSession().send(
+                e.respond(
                     new Data(
                         objects,
                         "projectStatus"

@@ -20,7 +20,12 @@ import java.util.List;
 public class UserActions {
     @WSEvent(method = "get", action = "login", description = "Display login form", enabled = true, name = "DisplayLoginForm")
     public void loginForm(RequestEvent e){
-        e.getSession().send(new LoginForm(e.getSession(), e.getRequest().getTemplateCache()));
+        e.respond(
+            new LoginForm(
+                e.getSession(),
+                e.getRequest().getTemplateCache()
+            )
+        );
     }
     @WSEvent(method = "post", action = "login", description = "initiate login", enabled = true, name = "InitiateLogin")
     public void login(RequestEvent e){
@@ -55,7 +60,12 @@ public class UserActions {
             feedback.put("status", "error");
         }
         try {
-            e.getSession().send(SynloadFramework.ow.writeValueAsString(new CallBackData(feedback, "login_feedback")));
+            e.respond(
+                new CallBackData(
+                    feedback,
+                    "login_feedback"
+                )
+            );
         }catch (Exception err){
             err.printStackTrace();
         }
@@ -107,7 +117,12 @@ public class UserActions {
             feedback.put("status", "error");
         }
         try {
-            e.getSession().send(SynloadFramework.ow.writeValueAsString(new CallBackData(feedback, "register_feedback")));
+            e.respond(
+                new CallBackData(
+                    feedback,
+                    "register_feedback"
+                )
+            );
         }catch (Exception err){
             err.printStackTrace();
         }
@@ -116,7 +131,7 @@ public class UserActions {
     public void logout(RequestEvent e){
         if(e.getSession().getSessionData().containsKey("user")){ // logged in?
             e.getSession().getSessionData().remove("user");
-            e.getSession().send(
+            e.respond(
                 new LoginForm(
                     e.getSession(),
                     e.getRequest().getTemplateCache()

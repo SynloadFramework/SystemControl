@@ -18,6 +18,7 @@ import java.util.Map;
 public class ProjectActions {
     @WSEvent(method = "create", action = "project", description = "Create project under the user logged in", enabled = true, name = "CreateNewProject")
     public void create(RequestEvent e){
+        HashMap<String, Object> objects = new HashMap<String, Object>();
         if(
             e.getSession().getSessionData().containsKey("user") &&
             e.getRequest().getData().containsKey("name") &&
@@ -35,11 +36,24 @@ public class ProjectActions {
             try{
                 p._insert();
                 p._set(u); // sets relation between project and user
+                objects.put("status", "success");
+                objects.put("project", p);
             }catch (Exception err){
+                objects.put("status", "error");
+                objects.put("error", "sqlerror");
             }
+
         }else{
             Log.info("Not logged in", ProjectActions.class);
+            objects.put("status", "error");
+            objects.put("error", "notloggedin");
         }
+        e.respond(
+            new Data(
+                objects,
+                "projectStatus"
+            )
+        );
     }
     @WSEvent(method = "get", action = "project", description = "get project by id", enabled = true, name = "GetProjectData")
     public void get(RequestEvent e){

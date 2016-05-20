@@ -9,6 +9,7 @@ import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
 import tech.synframe.systemcontrol.utils.ActionEnum;
 import tech.synframe.systemcontrol.utils.ExecuteShellSynFrame;
+import tech.synframe.systemcontrol.utils.Queue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -182,10 +183,11 @@ public class ProjectActions {
                 final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
                 if(project.size()>0) {
                     PendingAction pa = new PendingAction();
-                    pa.setAction("stop");
-                    pa.setProject(project.get(0).getId());
+                    pa.setAction("start");
                     pa._insert();
+                    project.get(0)._set(pa); // set relation to project
                     u._set(pa); // set relation to user
+                    Queue.add(pa);
                     objects.put("status", "success");
                     project.get(0).checkStatus();
                     objects.put("project", project.get(0));
@@ -225,7 +227,9 @@ public class ProjectActions {
                     pa.setAction("stop");
                     pa.setProject(project.get(0).getId());
                     pa._insert();
+                    project.get(0)._set(pa); // set relation to project
                     u._set(pa); // set relation to user
+                    Queue.add(pa);
                     objects.put("status", "success");
                     project.get(0).checkStatus();
                     objects.put("project", project.get(0));

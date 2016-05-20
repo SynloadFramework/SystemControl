@@ -52,6 +52,9 @@ public class Queue implements Runnable {
                             case 2:
                                 stopProject(project);
                             break;
+                            case -1:
+                                Log.error("action not found!", Queue.class);
+                            break;
                         }
                     }
                     remove(queue.get(0));

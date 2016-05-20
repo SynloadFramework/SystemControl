@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Nathaniel on 5/6/2016.
  */
 public class ProjectActions {
-    @WSEvent(method = "create", action = "project", description = "Create project under the user logged in", enabled = true, name = "CreateNewProject")
+    @WSEvent(method = "create", action = "project", description = "Create instance", enabled = true, name = "CreateNewInstance")
     public void create(RequestEvent e){
         HashMap<String, Object> objects = new HashMap<String, Object>();
         if(
@@ -29,20 +29,24 @@ public class ProjectActions {
             String path = e.getRequest().getData().get("path");
             int port = Integer.valueOf(e.getRequest().getData().get("port"));
             User u = (User) e.getSession().getSessionData().get("user");
-            Project p = new Project();
-            p.setName(name);
-            p.setPath(path);
-            p.setPort(port);
-            try{
-                p._insert();
-                p._set(u); // sets relation between project and user
-                objects.put("status", "success");
-                objects.put("project", p);
-            }catch (Exception err){
+            if(Project._exists(Project.class,"port=?", port)) {
+                Project p = new Project();
+                p.setName(name);
+                p.setPath(path);
+                p.setPort(port);
+                try {
+                    p._insert();
+                    p._set(u); // sets relation between project and user
+                    objects.put("status", "success");
+                    objects.put("project", p);
+                } catch (Exception err) {
+                    objects.put("status", "error");
+                    objects.put("error", "sqlerror");
+                }
+            }else{
                 objects.put("status", "error");
-                objects.put("error", "sqlerror");
+                objects.put("error", "exists");
             }
-
         }else{
             Log.info("Not logged in", ProjectActions.class);
             objects.put("status", "error");
@@ -55,7 +59,54 @@ public class ProjectActions {
             )
         );
     }
-    @WSEvent(method = "get", action = "project", description = "get project by id", enabled = true, name = "GetProjectData")
+
+    @WSEvent(method = "copy", action = "project", description = "Copy existing instance", enabled = true, name = "CopyExistingInstance")
+    public void copy(RequestEvent e){
+        HashMap<String, Object> objects = new HashMap<String, Object>();
+        if(
+            e.getSession().getSessionData().containsKey("user") &&
+            e.getRequest().getData().containsKey("instance") &&
+            e.getRequest().getData().containsKey("port")
+        ){
+            long instance = Long.valueOf(e.getRequest().getData().get("instance"));
+            int port = Integer.valueOf(e.getRequest().getData().get("port"));
+            User u = (User) e.getSession().getSessionData().get("user");
+            try {
+                List<Project> projects = Project._find(Project.class, "id=?", instance).exec(Project.class);
+                if(projects.size()==1){
+                    Project proj = projects.get(0);
+                    proj.setId(0);
+                    proj.setPort(port);
+                    if(Project._exists(Project.class,"port=?", port)) {
+                        proj._insert();
+                        proj._set(u); // sets relation between project and user
+                        objects.put("status", "success");
+                        objects.put("project", proj);
+                    }else{
+                        objects.put("status", "error");
+                        objects.put("error", "exists");
+                    }
+                }else{
+                    objects.put("status", "error");
+                    objects.put("error", "notexist");
+                }
+            }catch (Exception x){
+                objects.put("status", "error");
+                objects.put("error", "sqlerror");
+            }
+        }else{
+            Log.info("Not logged in", ProjectActions.class);
+            objects.put("status", "error");
+            objects.put("error", "notloggedin");
+        }
+        e.respond(
+                new Data(
+                        objects,
+                        "projectStatus"
+                )
+        );
+    }
+    @WSEvent(method = "get", action = "project", description = "get instance by id", enabled = true, name = "GetInstanceData")
     public void get(RequestEvent e){
         if(
                 e.getSession().getSessionData().containsKey("user") &&

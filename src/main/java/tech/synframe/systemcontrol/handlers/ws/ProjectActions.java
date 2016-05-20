@@ -186,7 +186,6 @@ public class ProjectActions {
                     pa.setAction("start");
                     pa._insert();
                     project.get(0)._set(pa); // set relation to project
-                    u._set(pa); // set relation to user
                     Queue.add(pa);
                     objects.put("status", "success");
                     project.get(0).checkStatus();
@@ -228,7 +227,6 @@ public class ProjectActions {
                     pa.setProject(project.get(0).getId());
                     pa._insert();
                     project.get(0)._set(pa); // set relation to project
-                    u._set(pa); // set relation to user
                     Queue.add(pa);
                     objects.put("status", "success");
                     project.get(0).checkStatus();

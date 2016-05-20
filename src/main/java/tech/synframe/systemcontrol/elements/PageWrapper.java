@@ -37,6 +37,5 @@ public class PageWrapper extends Response {
         this.setParentTemplate("index"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)
         this.setAction("alone"); // how to transition the element to the new content
         this.setPageId("systemControl");
-        this.setPageTitle("System Control");
     }
 }

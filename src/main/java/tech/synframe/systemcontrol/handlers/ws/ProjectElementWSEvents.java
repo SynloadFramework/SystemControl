@@ -4,6 +4,7 @@ import com.synload.eventsystem.events.RequestEvent;
 import com.synload.framework.handlers.Data;
 import com.synload.framework.handlers.Request;
 import com.synload.framework.ws.annotations.WSEvent;
+import tech.synframe.systemcontrol.elements.dashboard.DashboardMain;
 import tech.synframe.systemcontrol.elements.project.CreateProjectPage;
 import tech.synframe.systemcontrol.models.User;
 
@@ -18,6 +19,19 @@ public class ProjectElementWSEvents {
         if(e.getSession().getSessionData().containsKey("user")){
             e.respond(
                 new CreateProjectPage(
+                    e.getSession(),
+                    e.getRequest().getTemplateCache(),
+                    (User) e.getSession().getSessionData().get("user")
+                )
+            );
+        }
+    }
+
+    @WSEvent(name="DashboardMain", description="", enabled = true, method = "get", action = "dashboard")
+    public void dashboardMain(RequestEvent e){
+        if(e.getSession().getSessionData().containsKey("user")){
+            e.respond(
+                new DashboardMain(
                     e.getSession(),
                     e.getRequest().getTemplateCache(),
                     (User) e.getSession().getSessionData().get("user")

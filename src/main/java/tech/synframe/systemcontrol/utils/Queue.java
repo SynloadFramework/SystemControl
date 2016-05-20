@@ -25,6 +25,14 @@ public class Queue implements Runnable {
             e.printStackTrace();
         }
     }
+    public int actionToInt(String act){
+        if(act.equals("start")){
+            return 1;
+        }else if(act.equals("stop")){
+            return 2;
+        }
+        return -1;
+    }
     public void run(){
         while(true) {
             if (queue.size() > 0) {
@@ -32,11 +40,11 @@ public class Queue implements Runnable {
                     List<Project> ps = queue.get(0)._related(Project.class).exec(Project.class);
                     if(ps.size()>0){
                         Project project = ps.get(0);
-                        switch(ActionEnum.parse(queue.get(0).getAction())){
-                            case START:
+                        switch(actionToInt(queue.get(0).getAction())){
+                            case 1:
                                 startProject(project);
                             break;
-                            case STOP:
+                            case 2:
                                 stopProject(project);
                             break;
                         }

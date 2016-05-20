@@ -20,6 +20,10 @@ public class Queue implements Runnable {
     public static void remove(PendingAction pa){
         queue.remove(pa);
         try {
+            List<Project> ps = pa._related(Project.class).exec(Project.class);
+            if(ps.size()>0) {
+                ps.get(0)._unset(pa); // remove relation
+            }
             pa._delete();
         }catch (Exception e){
             e.printStackTrace();

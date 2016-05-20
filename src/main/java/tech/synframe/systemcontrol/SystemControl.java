@@ -4,6 +4,7 @@ import com.synload.framework.Log;
 import com.synload.framework.modules.ModuleClass;
 import com.synload.framework.modules.annotations.Module;
 import com.synload.framework.modules.annotations.Module.LogLevel;
+import tech.synframe.systemcontrol.utils.Queue;
 
 /*
  * Module class (requires both the annotation and the extending of the class)
@@ -14,6 +15,7 @@ public class SystemControl extends ModuleClass {
 	public void initialize() {
 		// Sent when the module is run (after module elements loaded)
 		Log.info("Loaded System Control", SystemControl.class);
+		new Thread(new Queue()).start();
 	}
 	@Override
 	public void crossTalk(Object... obj) {

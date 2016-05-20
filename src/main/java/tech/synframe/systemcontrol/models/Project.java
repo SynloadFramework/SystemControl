@@ -3,7 +3,9 @@ package tech.synframe.systemcontrol.models;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.synload.framework.modules.annotations.sql.*;
 import com.synload.framework.sql.Model;
+import tech.synframe.systemcontrol.utils.ExecuteShellSynFrame;
 
+import java.io.File;
 import java.sql.ResultSet;
 
 /**
@@ -15,11 +17,22 @@ import java.sql.ResultSet;
 public class Project extends Model{
     public Project(ResultSet rs) {
         super(rs);
+        checkStatus();
     }
 
     public Project(Object... data) {
         super(data);
+        checkStatus();
     }
+
+    public long freeMemory = -1;
+    public long totalMemory = -1;
+    public long maxMemory = -1;
+    public long totalSpace = -1;
+    public long freeSpace = -1;
+    public long usableSpace = -1;
+    public String running = "u";
+
     @MediumIntegerColumn(length=20, AutoIncrement=true, Key=true)
     public long id;
 
@@ -78,5 +91,30 @@ public class Project extends Model{
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public void checkStatus(){
+        if(this.instance()!=null){
+            if(this.instance().isRunning()){
+                freeMemory = this.instance().getRuntime().freeMemory();
+                totalMemory = this.instance().getRuntime().totalMemory();
+                maxMemory = this.instance().getRuntime().maxMemory();
+                running="y";
+            }else{
+                running="n";
+            }
+        }
+        try {
+            File directory = new File(this.getPath());
+            totalSpace = directory.getTotalSpace();
+            freeSpace = directory.getFreeSpace();
+            usableSpace = directory.getUsableSpace();
+        }catch(Exception e){}
+    }
+    public ExecuteShellSynFrame instance(){
+        if(ExecuteShellSynFrame.instances.containsKey(getId())){
+            return ExecuteShellSynFrame.instances.get(getId());
+        }
+        return null;
     }
 }

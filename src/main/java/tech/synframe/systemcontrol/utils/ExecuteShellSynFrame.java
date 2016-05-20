@@ -13,6 +13,7 @@ import java.util.Map;
 public class ExecuteShellSynFrame implements Runnable{
     public Project project;
     public Process p;
+    public Runtime runtime;
     public StringBuffer output = new StringBuffer();
     public static Map<Long, ExecuteShellSynFrame> instances = new HashMap<Long, ExecuteShellSynFrame>();
     public ExecuteShellSynFrame(Project project){
@@ -32,7 +33,8 @@ public class ExecuteShellSynFrame implements Runnable{
     public void run(){
         instances.put(this.project.getId(), this);
         try {
-            p = Runtime.getRuntime().exec("./bin/SynloadFramework -sitepath "+this.project.getPath()+" -port "+this.project.getPort());
+            runtime = Runtime.getRuntime();
+            p = runtime.exec("./bin/SynloadFramework -sitepath "+this.project.getPath()+" -port "+this.project.getPort());
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while(this.isRunning()) {
                 String line = "";
@@ -44,5 +46,45 @@ public class ExecuteShellSynFrame implements Runnable{
             e.printStackTrace();
         }
         instances.remove(this.project.getId());
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Process getP() {
+        return p;
+    }
+
+    public void setP(Process p) {
+        this.p = p;
+    }
+
+    public Runtime getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(Runtime runtime) {
+        this.runtime = runtime;
+    }
+
+    public StringBuffer getOutput() {
+        return output;
+    }
+
+    public void setOutput(StringBuffer output) {
+        this.output = output;
+    }
+
+    public static Map<Long, ExecuteShellSynFrame> getInstances() {
+        return instances;
+    }
+
+    public static void setInstances(Map<Long, ExecuteShellSynFrame> instances) {
+        ExecuteShellSynFrame.instances = instances;
     }
 }

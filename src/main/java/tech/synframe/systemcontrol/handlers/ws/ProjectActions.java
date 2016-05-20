@@ -4,8 +4,10 @@ import com.synload.eventsystem.events.RequestEvent;
 import com.synload.framework.Log;
 import com.synload.framework.handlers.Data;
 import com.synload.framework.ws.annotations.WSEvent;
+import tech.synframe.systemcontrol.models.PendingAction;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
+import tech.synframe.systemcontrol.utils.ActionEnum;
 import tech.synframe.systemcontrol.utils.ExecuteShellSynFrame;
 
 import java.util.HashMap;
@@ -195,5 +197,84 @@ public class ProjectActions {
             Log.info("Not logged in", ProjectActions.class);
         }
     }
-
+    @WSEvent(method = "start", action = "project", description = "Start a project by id", enabled = true, name = "StartProject")
+    public void start(RequestEvent e){
+        HashMap<String, Object> objects = new HashMap<String, Object>();
+        if(
+            e.getSession().getSessionData().containsKey("user") &&
+            e.getRequest().getData().containsKey("id")
+        ){
+            User u = (User) e.getSession().getSessionData().get("user");
+            int id = Integer.valueOf(e.getRequest().getData().get("id"));
+            try{
+                final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
+                if(project.size()>0) {
+                    PendingAction pa = new PendingAction();
+                    pa.setAction("stop");
+                    pa.setProject(project.get(0).getId());
+                    pa._insert();
+                    u._set(pa); // set relation to user
+                    objects.put("status", "success");
+                    project.get(0).checkStatus();
+                    objects.put("project", project.get(0));
+                }else{
+                    objects.put("status", "error");
+                    objects.put("error", "notexist");
+                }
+            }catch (Exception err){
+                objects.put("status", "error");
+                objects.put("error", "sqlerror");
+            }
+        }else{
+            Log.info("Not logged in", ProjectActions.class);
+            objects.put("status", "error");
+            objects.put("error", "notloggedin");
+        }
+        e.respond(
+            new Data(
+                objects,
+                "startProject"
+            )
+        );
+    }
+    @WSEvent(method = "stop", action = "project", description = "Stop a project by id", enabled = true, name = "StopProject")
+    public void stop(RequestEvent e){
+        HashMap<String, Object> objects = new HashMap<String, Object>();
+        if(
+            e.getSession().getSessionData().containsKey("user") &&
+            e.getRequest().getData().containsKey("id")
+        ){
+            User u = (User) e.getSession().getSessionData().get("user");
+            int id = Integer.valueOf(e.getRequest().getData().get("id"));
+            try{
+                final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
+                if(project.size()>0) {
+                    PendingAction pa = new PendingAction();
+                    pa.setAction("stop");
+                    pa.setProject(project.get(0).getId());
+                    pa._insert();
+                    u._set(pa); // set relation to user
+                    objects.put("status", "success");
+                    project.get(0).checkStatus();
+                    objects.put("project", project.get(0));
+                }else{
+                    objects.put("status", "error");
+                    objects.put("error", "notexist");
+                }
+            }catch (Exception err){
+                objects.put("status", "error");
+                objects.put("error", "sqlerror");
+            }
+        }else{
+            Log.info("Not logged in", ProjectActions.class);
+            objects.put("status", "error");
+            objects.put("error", "notloggedin");
+        }
+        e.respond(
+            new Data(
+                objects,
+                "stopProject"
+            )
+        );
+    }
 }

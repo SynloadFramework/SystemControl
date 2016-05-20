@@ -44,6 +44,7 @@ public class Queue implements Runnable {
                 try {
                     List<Project> ps = queue.get(0)._related(Project.class).exec(Project.class);
                     if(ps.size()>0){
+                        Log.error("project found!", Queue.class);
                         Project project = ps.get(0);
                         switch(actionToInt(queue.get(0).getAction())){
                             case 1:
@@ -56,6 +57,8 @@ public class Queue implements Runnable {
                                 Log.error("action not found!", Queue.class);
                             break;
                         }
+                    }else{
+                        Log.error("project not found!", Queue.class);
                     }
                     remove(queue.get(0));
                 }catch(Exception e){

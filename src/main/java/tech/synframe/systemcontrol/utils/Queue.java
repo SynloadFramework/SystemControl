@@ -60,7 +60,7 @@ public class Queue implements Runnable {
                     }else{
                         Log.error("project not found!", Queue.class);
                     }
-                    //remove(queue.get(0));
+                    remove(queue.get(0));
                 }catch(Exception e){
                     e.printStackTrace();
                 }

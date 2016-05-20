@@ -183,9 +183,9 @@ public class ProjectActions {
                 final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
                 if(project.size()>0) {
                     PendingAction pa = new PendingAction();
+                    pa.setProject(project.get(0).getId());
                     pa.setAction("start");
                     pa._insert();
-                    project.get(0)._set(pa); // set relation to project
                     Queue.add(pa);
                     objects.put("status", "success");
                     project.get(0).checkStatus();
@@ -226,7 +226,6 @@ public class ProjectActions {
                     pa.setAction("stop");
                     pa.setProject(project.get(0).getId());
                     pa._insert();
-                    project.get(0)._set(pa); // set relation to project
                     Queue.add(pa);
                     objects.put("status", "success");
                     project.get(0).checkStatus();

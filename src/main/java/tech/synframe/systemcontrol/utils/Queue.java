@@ -1,6 +1,7 @@
 package tech.synframe.systemcontrol.utils;
 
 import com.synload.eventsystem.EventPublisher;
+import com.synload.framework.Log;
 import tech.synframe.systemcontrol.events.QueueAction;
 import tech.synframe.systemcontrol.models.PendingAction;
 import tech.synframe.systemcontrol.models.Project;
@@ -30,9 +31,9 @@ public class Queue implements Runnable {
         }
     }
     public int actionToInt(String act){
-        if(act.equals("start")){
+        if(act.equalsIgnoreCase("start")){
             return 1;
-        }else if(act.equals("stop")){
+        }else if(act.equalsIgnoreCase("stop")){
             return 2;
         }
         return -1;
@@ -82,16 +83,20 @@ public class Queue implements Runnable {
             ExecuteShellSynFrame instance = ExecuteShellSynFrame.instances.get(project.getId());
             if(instance.isRunning()){
                 // Already running, no action
+                Log.info("Already running",Queue.class);
             }else{
                 ExecuteShellSynFrame.instances.remove(project.getId()); // remove existing instance
                 new Thread(new ExecuteShellSynFrame(project)).start(); // start instance of project
                 raiseEvent(project, "start");
+                Log.info("Start project",Queue.class);
             }
         }else{
             // no existing instance found
             new Thread(new ExecuteShellSynFrame(project)).start();
             raiseEvent(project, "start");
+            Log.info("Start project",Queue.class);
         }
+        Log.info("done",Queue.class);
     }
     public void stopProject(Project project){
         if(ExecuteShellSynFrame.instances.containsKey(project.getId())){
@@ -99,11 +104,15 @@ public class Queue implements Runnable {
             if(instance.isRunning()){
                 instance.stop();
                 raiseEvent(project, "stop");
+                Log.info("Stop project",Queue.class);
             }else{
                 // nothing to do, instance not running
+                Log.info("nothing...",Queue.class);
             }
         }else{
             // nothing to do, no instance running
+            Log.info("nothing...",Queue.class);
         }
+        Log.info("done",Queue.class);
     }
 }

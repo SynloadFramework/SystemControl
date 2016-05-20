@@ -29,7 +29,7 @@ public class ProjectActions {
             String path = e.getRequest().getData().get("path");
             int port = Integer.valueOf(e.getRequest().getData().get("port"));
             User u = (User) e.getSession().getSessionData().get("user");
-            if(Project._exists(Project.class,"port=?", port)) {
+            if(!Project._exists(Project.class,"port=?", port)) {
                 Project p = new Project();
                 p.setName(name);
                 p.setPath(path);
@@ -77,7 +77,7 @@ public class ProjectActions {
                     Project proj = projects.get(0);
                     proj.setId(0);
                     proj.setPort(port);
-                    if(Project._exists(Project.class,"port=?", port)) {
+                    if(!Project._exists(Project.class,"port=?", port)) {
                         proj._insert();
                         proj._set(u); // sets relation between project and user
                         objects.put("status", "success");

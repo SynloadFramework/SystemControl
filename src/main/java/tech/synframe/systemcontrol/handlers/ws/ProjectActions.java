@@ -108,34 +108,6 @@ public class ProjectActions {
                 )
         );
     }
-    @WSEvent(method = "get", action = "project", description = "get instance by id", enabled = true, name = "GetInstanceData")
-    public void get(RequestEvent e){
-        if(
-                e.getSession().getSessionData().containsKey("user") &&
-                e.getRequest().getData().containsKey("id") &&
-                e.getRequest().getData().containsKey("trigger")
-        ){
-            User u = (User) e.getSession().getSessionData().get("user");
-            int id = Integer.valueOf(e.getRequest().getData().get("id"));
-            String trigger = e.getRequest().getData().get("trigger");
-            try{
-                final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
-                if(project.size()>0) {
-                    e.respond(
-                        new Data(
-                            new HashMap<String, Object>() {{
-                                put("project", project.get(0));
-                            }},
-                            trigger
-                        )
-                    );
-                }
-            }catch (Exception err){
-            }
-        }else{
-            Log.info("Not logged in", ProjectActions.class);
-        }
-    }
     @WSEvent(method = "delete", action = "project", description = "Delete a project by id", enabled = true, name = "DeleteProject")
     public void delete(RequestEvent e){
         if(

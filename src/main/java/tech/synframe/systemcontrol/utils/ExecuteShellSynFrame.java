@@ -33,11 +33,33 @@ public class ExecuteShellSynFrame implements Runnable{
     public void stop(){
         p.destroy();
     }
+    public class LogWriter implements Runnable{
+        public LinkedList<String> lines = new LinkedList<String>();
+        public void run(){
+            while(true) {
+                try {
+                    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./log/" + project.getId() + ".log", true)));
+                    out.println(lines.getFirst());
+                    out.close();
+                    lines.removeFirst();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Thread.sleep(1L);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     public void run(){
         instances.put(this.project.getId(), this);
         //Log.info("started project", ExecuteShellSynFrame.class);
         try {
             runtime = Runtime.getRuntime();
+            LogWriter writer = new LogWriter();
+            new Thread(writer).start();
             p = runtime.exec(
                 "./bin/SynloadFramework"+
                 " -sitepath "+this.project.getPath()+
@@ -56,13 +78,7 @@ public class ExecuteShellSynFrame implements Runnable{
                 int id = 0;
                 while((line = reader.readLine()) != null) {
                     id++;
-                    try {
-                        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./log/"+project.getId()+".log", true)));
-                        out.println(line);
-                        out.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    writer.lines.add(line);
                     output.addLast(new ConsoleLine(line,id));
                     if(output.size()>25){
                         output.removeFirst();

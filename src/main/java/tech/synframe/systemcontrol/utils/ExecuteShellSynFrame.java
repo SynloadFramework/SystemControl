@@ -82,7 +82,7 @@ public class ExecuteShellSynFrame implements Runnable{
                     id++;
                     writer.lines.add(line);
                     output.addLast(new ConsoleLine(line,id));
-                    if(output.size()>25){
+                    if(output.size()>50){
                         output.removeFirst();
                     }
                 }

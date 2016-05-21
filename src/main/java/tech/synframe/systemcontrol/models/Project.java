@@ -17,7 +17,9 @@ import java.util.Map;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
 @SQLTable(name = "Project Model", version = 0.1, description = "Instances of synframe project")
 public class Project extends Model{
+
     public static Map<Long, Map<String, Object>> projectStatistics = new HashMap<Long, Map<String, Object>>();
+
     public Project(ResultSet rs) {
         super(rs);
         checkStatus();
@@ -113,7 +115,6 @@ public class Project extends Model{
                     if(projectStatistics.get(this.getId()).containsKey("clients")){
                         clients = (Integer) projectStatistics.get(this.getId()).get("clients");
                     }
-
                 }
                 running="y";
             }else{

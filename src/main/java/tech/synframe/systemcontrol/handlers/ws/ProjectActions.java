@@ -134,6 +134,7 @@ public class ProjectActions {
     }
     @WSEvent(method = "status", action = "project", description = "Show project running status", enabled = true, name = "StatusProject")
     public void status(RequestEvent e){
+        HashMap<String, Object> objects = new HashMap<String, Object>();
         if(
             e.getSession().getSessionData().containsKey("user") &&
             e.getRequest().getData().containsKey("id")
@@ -141,37 +142,29 @@ public class ProjectActions {
             User u = (User) e.getSession().getSessionData().get("user");
             int id = Integer.valueOf(e.getRequest().getData().get("id"));
             try{
-                HashMap<String, Object> objects = new HashMap<String, Object>();
                 final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
                 if(project.size()>0) {
-                    if(ExecuteShellSynFrame.instances.containsKey(project.get(0).getId())){
-                        ExecuteShellSynFrame instance = ExecuteShellSynFrame.instances.get(project.get(0).getId());
-                        if(instance.isRunning()){
-                            objects.put("status", true);
-                            objects.put("project", project.get(0));
-                        }else{
-                            objects.put("status", false);
-                            objects.put("project", project.get(0));
-                        }
-                    }else{
-                        objects.put("status", false);
-                        objects.put("project", project.get(0));
-                    }
+                    objects.put("status", "success");
+                    objects.put("project", project.get(0));
                 }else{
-                    objects.put("status", false);
-                    objects.put("project", false);
+                    objects.put("status", "error");
+                    objects.put("error", "notexist");
                 }
-                e.respond(
-                    new Data(
-                        objects,
-                        "projectStatus"
-                    )
-                );
             }catch (Exception err){
+                objects.put("status", "error");
+                objects.put("error", "sqlerror");
             }
         }else{
             Log.info("Not logged in", ProjectActions.class);
+            objects.put("status", "error");
+            objects.put("error", "notloggedin");
         }
+        e.respond(
+            new Data(
+                objects,
+                "projectStatus"
+            )
+        );
     }
     @WSEvent(method = "start", action = "project", description = "Start a project by id", enabled = true, name = "StartProject")
     public void start(RequestEvent e){

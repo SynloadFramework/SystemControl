@@ -17,7 +17,7 @@ import java.util.Map;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
 @SQLTable(name = "Project Model", version = 0.1, description = "Instances of synframe project")
 public class Project extends Model{
-    public static Map<Integer, Map<String, Object>> projectStatistics = new HashMap<Integer, Map<String, Object>>();
+    public static Map<Long, Map<String, Object>> projectStatistics = new HashMap<Long, Map<String, Object>>();
     public Project(ResultSet rs) {
         super(rs);
         checkStatus();

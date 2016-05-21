@@ -260,7 +260,7 @@ public class ProjectActions {
             // stat doc received \o/
             Log.info("Got some", ProjectActions.class);
             StatisticDocument sd = (StatisticDocument) e.getData();
-            int projectId = Integer.valueOf(sd.getIdentifier());
+            long projectId = Long.valueOf(sd.getIdentifier());
             Map<String, Object> statistics = new HashMap<String, Object>();
             statistics.put("free", sd.getFree());
             statistics.put("total", sd.getTotal());

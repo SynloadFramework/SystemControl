@@ -37,13 +37,15 @@ public class ExecuteShellSynFrame implements Runnable{
         public LinkedList<String> lines = new LinkedList<String>();
         public void run(){
             while(true) {
-                try {
-                    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./log/" + project.getId() + ".log", true)));
-                    out.println(lines.getFirst());
-                    out.close();
-                    lines.removeFirst();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(lines.size()!=0) {
+                    try {
+                        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./log/" + project.getId() + ".log", true)));
+                        out.println(lines.getFirst());
+                        out.close();
+                        lines.removeFirst();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 try {
                     Thread.sleep(1L);

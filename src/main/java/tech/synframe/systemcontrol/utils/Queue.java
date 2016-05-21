@@ -44,7 +44,7 @@ public class Queue implements Runnable {
                 try {
                     List<Project> ps = queue.get(0)._related(Project.class).exec(Project.class);
                     if(ps.size()>0){
-                        Log.error("project found!", Queue.class);
+                        //Log.error("project found!", Queue.class);
                         Project project = ps.get(0);
                         switch(actionToInt(queue.get(0).getAction())){
                             case 1:
@@ -54,18 +54,18 @@ public class Queue implements Runnable {
                                 stopProject(project);
                             break;
                             case -1:
-                                Log.error("action not found!", Queue.class);
+                                //Log.error("action not found!", Queue.class);
                             break;
                         }
                     }else{
-                        Log.error("project not found!", Queue.class);
+                        //Log.error("project not found!", Queue.class);
                     }
                     remove(queue.get(0));
                 }catch(Exception e){
                     e.printStackTrace();
                 }
             }
-            Log.info("test", Queue.class);
+            //Log.info("test", Queue.class);
             try {
                 Thread.sleep(1000);
             }catch (Exception e){
@@ -90,20 +90,20 @@ public class Queue implements Runnable {
             ExecuteShellSynFrame instance = ExecuteShellSynFrame.instances.get(project.getId());
             if(instance.isRunning()){
                 // Already running, no action
-                Log.info("Already running",Queue.class);
+                //Log.info("Already running",Queue.class);
             }else{
                 ExecuteShellSynFrame.instances.remove(project.getId()); // remove existing instance
                 new Thread(new ExecuteShellSynFrame(project)).start(); // start instance of project
                 raiseEvent(project, "start");
-                Log.info("Start project",Queue.class);
+                //Log.info("Start project",Queue.class);
             }
         }else{
             // no existing instance found
             new Thread(new ExecuteShellSynFrame(project)).start();
             raiseEvent(project, "start");
-            Log.info("Start project",Queue.class);
+            //Log.info("Start project",Queue.class);
         }
-        Log.info("done",Queue.class);
+        //Log.info("done",Queue.class);
     }
     public void stopProject(Project project){
         if(ExecuteShellSynFrame.instances.containsKey(project.getId())){
@@ -111,15 +111,15 @@ public class Queue implements Runnable {
             if(instance.isRunning()){
                 instance.stop();
                 raiseEvent(project, "stop");
-                Log.info("Stop project",Queue.class);
+                //Log.info("Stop project",Queue.class);
             }else{
                 // nothing to do, instance not running
-                Log.info("nothing...",Queue.class);
+                //Log.info("nothing...",Queue.class);
             }
         }else{
             // nothing to do, no instance running
-            Log.info("nothing...",Queue.class);
+            //Log.info("nothing...",Queue.class);
         }
-        Log.info("done",Queue.class);
+        //Log.info("done",Queue.class);
     }
 }

@@ -1,6 +1,7 @@
 package tech.synframe.systemcontrol.utils;
 
 import com.synload.framework.Log;
+import com.synload.framework.SynloadFramework;
 import tech.synframe.systemcontrol.models.Project;
 
 import java.io.BufferedReader;
@@ -33,10 +34,17 @@ public class ExecuteShellSynFrame implements Runnable{
     }
     public void run(){
         instances.put(this.project.getId(), this);
-        Log.info("started project", ExecuteShellSynFrame.class);
+        //Log.info("started project", ExecuteShellSynFrame.class);
         try {
             runtime = Runtime.getRuntime();
-            p = runtime.exec("./bin/SynloadFramework -sitepath "+this.project.getPath()+" -port "+this.project.getPort());
+            p = runtime.exec(
+                "./bin/SynloadFramework"+
+                " -sitepath "+this.project.getPath()+
+                " -port "+this.project.getPort()+
+                " -cb 127.0.0.1:"+ SynloadFramework.serverTalkPort+"&"+SynloadFramework.serverTalkKey+
+                " -id "+this.project.getId()+
+                " -scb"
+            );
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while(this.isRunning()) {
                 String line = "";
@@ -49,7 +57,7 @@ public class ExecuteShellSynFrame implements Runnable{
             e.printStackTrace();
         }
         instances.remove(this.project.getId());
-        Log.info("stopped project", ExecuteShellSynFrame.class);
+        //Log.info("stopped project", ExecuteShellSynFrame.class);
     }
 
     public Project getProject() {

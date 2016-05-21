@@ -11,10 +11,12 @@ import tech.synframe.systemcontrol.models.PendingAction;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
 import tech.synframe.systemcontrol.utils.ActionEnum;
+import tech.synframe.systemcontrol.utils.ConsoleLine;
 import tech.synframe.systemcontrol.utils.ExecuteShellSynFrame;
 import tech.synframe.systemcontrol.utils.Queue;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -164,6 +166,54 @@ public class ProjectActions {
                 objects,
                 "projectStatus"
             )
+        );
+    }
+    @WSEvent(method = "log", action = "project", description = "Show project running status", enabled = true, name = "StatusProject")
+    public void log(RequestEvent e){
+        HashMap<String, Object> objects = new HashMap<String, Object>();
+        if(
+            e.getSession().getSessionData().containsKey("user") &&
+            e.getRequest().getData().containsKey("id")
+        ){
+            User u = (User) e.getSession().getSessionData().get("user");
+            int id = Integer.valueOf(e.getRequest().getData().get("id"));
+            int lastId = 0;
+            if(e.getRequest().getData().containsKey("lastid")) {
+                lastId = Integer.valueOf(e.getRequest().getData().get("lastid"));
+            }
+            try{
+                final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
+                if(project.size()>0) {
+                    objects.put("status", "success");
+                    if(lastId==0){
+                        objects.put("log", project.get(0).instance().getOutput());
+                    }else {
+                        LinkedList<ConsoleLine> lines = new LinkedList<ConsoleLine>();
+                        for(ConsoleLine line : new LinkedList<ConsoleLine>(project.get(0).instance().getOutput())){
+                            if(line.getId()>lastId){
+                                lines.add(line);
+                            }
+                        }
+                        objects.put("log", lines);
+                    }
+                }else{
+                    objects.put("status", "error");
+                    objects.put("error", "notexist");
+                }
+            }catch (Exception err){
+                objects.put("status", "error");
+                objects.put("error", "sqlerror");
+            }
+        }else{
+            Log.info("Not logged in", ProjectActions.class);
+            objects.put("status", "error");
+            objects.put("error", "notloggedin");
+        }
+        e.respond(
+                new Data(
+                        objects,
+                        "projectStatus"
+                )
         );
     }
     @WSEvent(method = "start", action = "project", description = "Start a project by id", enabled = true, name = "StartProject")

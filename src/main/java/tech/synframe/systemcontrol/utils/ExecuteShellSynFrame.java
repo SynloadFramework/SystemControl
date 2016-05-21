@@ -1,12 +1,13 @@
 package tech.synframe.systemcontrol.utils;
 
+import com.google.common.io.Files;
 import com.synload.framework.Log;
 import com.synload.framework.SynloadFramework;
 import tech.synframe.systemcontrol.models.Project;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -16,7 +17,7 @@ public class ExecuteShellSynFrame implements Runnable{
     public Project project;
     public Process p;
     public Runtime runtime;
-    public StringBuffer output = new StringBuffer();
+    public LinkedList<ConsoleLine> output = new LinkedList<ConsoleLine>();
     public static Map<Long, ExecuteShellSynFrame> instances = new HashMap<Long, ExecuteShellSynFrame>();
     public ExecuteShellSynFrame(Project project){
         this.project = project;
@@ -45,11 +46,27 @@ public class ExecuteShellSynFrame implements Runnable{
                 " -id "+this.project.getId()+
                 " -scb"
             );
+            File logDirectory = new File("./log");
+            if(!logDirectory.exists()){
+                logDirectory.mkdir();
+            }
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while(this.isRunning()) {
                 String line = "";
-                while ((line = reader.readLine()) != null) {
-                    output.append(line + "\n");
+                int id = 0;
+                while((line = reader.readLine()) != null) {
+                    id++;
+                    try {
+                        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./log/"+project.getId()+".log", true)));
+                        out.println(line);
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    output.addLast(new ConsoleLine(line,id));
+                    if(output.size()>25){
+                        output.removeFirst();
+                    }
                 }
             }
             Log.info(output.toString(), ExecuteShellSynFrame.class);
@@ -84,19 +101,19 @@ public class ExecuteShellSynFrame implements Runnable{
         this.runtime = runtime;
     }
 
-    public StringBuffer getOutput() {
-        return output;
-    }
-
-    public void setOutput(StringBuffer output) {
-        this.output = output;
-    }
-
     public static Map<Long, ExecuteShellSynFrame> getInstances() {
         return instances;
     }
 
     public static void setInstances(Map<Long, ExecuteShellSynFrame> instances) {
         ExecuteShellSynFrame.instances = instances;
+    }
+
+    public LinkedList<ConsoleLine> getOutput() {
+        return output;
+    }
+
+    public void setOutput(LinkedList<ConsoleLine> output) {
+        this.output = output;
     }
 }

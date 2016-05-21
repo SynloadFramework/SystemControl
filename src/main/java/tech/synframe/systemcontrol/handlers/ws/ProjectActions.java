@@ -258,7 +258,7 @@ public class ProjectActions {
     public void projectStatistics(STMessageReceivedEvent e){
         if(StatisticDocument.class.isInstance(e.getData())){
             // stat doc received \o/
-            Log.info("Got some", null);
+            Log.info("Got some", ProjectActions.class);
             StatisticDocument sd = (StatisticDocument) e.getData();
             int projectId = Integer.valueOf(sd.getIdentifier());
             Map<String, Object> statistics = new HashMap<String, Object>();

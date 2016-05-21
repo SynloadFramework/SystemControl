@@ -1,9 +1,12 @@
 package tech.synframe.systemcontrol.handlers.ws;
 
 import com.synload.eventsystem.events.RequestEvent;
+import com.synload.eventsystem.events.STMessageReceivedEvent;
+import com.synload.eventsystem.events.annotations.Event;
 import com.synload.framework.Log;
 import com.synload.framework.handlers.Data;
 import com.synload.framework.ws.annotations.WSEvent;
+import com.synload.talksystem.statistics.StatisticDocument;
 import tech.synframe.systemcontrol.models.PendingAction;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
@@ -249,5 +252,20 @@ public class ProjectActions {
                 "stopProject"
             )
         );
+    }
+
+    @Event(name="ProjectStats", description = "Project statistics received over the server talk line", enabled = true)
+    public void projectStatistics(STMessageReceivedEvent e){
+        if(StatisticDocument.class.isInstance(e.getData())){
+            // stat doc received \o/
+            StatisticDocument sd = (StatisticDocument) e.getData();
+            int projectId = Integer.valueOf(sd.getIdentifier());
+            Map<String, Object> statistics = new HashMap<String, Object>();
+            statistics.put("free", sd.getFree());
+            statistics.put("total", sd.getTotal());
+            statistics.put("max", sd.getMax());
+            statistics.put("clients", sd.getClients());
+            Project.projectStatistics.put(projectId,statistics);
+        }
     }
 }

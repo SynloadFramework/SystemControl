@@ -7,6 +7,8 @@ import tech.synframe.systemcontrol.utils.ExecuteShellSynFrame;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Nathaniel on 5/5/2016.
@@ -15,6 +17,7 @@ import java.sql.ResultSet;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
 @SQLTable(name = "Project Model", version = 0.1, description = "Instances of synframe project")
 public class Project extends Model{
+    public static Map<Integer, Map<String, Object>> projectStatistics = new HashMap<Integer, Map<String, Object>>();
     public Project(ResultSet rs) {
         super(rs);
         checkStatus();
@@ -30,6 +33,7 @@ public class Project extends Model{
     public long maxMemory = -1;
     public long totalSpace = -1;
     public long freeSpace = -1;
+    public int clients = 0;
     public long usableSpace = -1;
     public String running = "u";
 
@@ -96,9 +100,21 @@ public class Project extends Model{
     public void checkStatus(){
         if(this.instance()!=null){
             if(this.instance().isRunning()){
-                freeMemory = this.instance().getRuntime().freeMemory();
-                totalMemory = this.instance().getRuntime().totalMemory();
-                maxMemory = this.instance().getRuntime().maxMemory();
+                if(projectStatistics.containsKey(this.getId())){
+                    if(projectStatistics.get(this.getId()).containsKey("free")){
+                        freeMemory = (Long) projectStatistics.get(this.getId()).get("free");
+                    }
+                    if(projectStatistics.get(this.getId()).containsKey("total")){
+                        totalMemory = (Long) projectStatistics.get(this.getId()).get("total");
+                    }
+                    if(projectStatistics.get(this.getId()).containsKey("max")){
+                        maxMemory = (Long) projectStatistics.get(this.getId()).get("max");
+                    }
+                    if(projectStatistics.get(this.getId()).containsKey("clients")){
+                        clients = (Integer) projectStatistics.get(this.getId()).get("clients");
+                    }
+
+                }
                 running="y";
             }else{
                 running="n";

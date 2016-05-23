@@ -1,10 +1,7 @@
 package tech.synframe.systemcontrol.utils;
 
-import com.google.common.io.Files;
-import com.synload.framework.Log;
 import com.synload.framework.SynloadFramework;
 import tech.synframe.systemcontrol.models.Project;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -87,7 +84,7 @@ public class ExecuteShellSynFrame implements Runnable{
                     }
                 }
             }
-            Log.info(output.toString(), ExecuteShellSynFrame.class);
+            //Log.info(output.toString(), ExecuteShellSynFrame.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

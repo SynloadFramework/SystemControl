@@ -300,6 +300,7 @@ public class ProjectActions {
     @Event(name="ProjectStats", description = "Project statistics received over the server talk line", enabled = true)
     public void projectStatistics(STMessageReceivedEvent e){
         if(StatisticDocument.class.isInstance(e.getData())){
+
             // stat doc received \o/
             StatisticDocument sd = (StatisticDocument) e.getData();
             long projectId = Long.valueOf(sd.getIdentifier());
@@ -308,6 +309,11 @@ public class ProjectActions {
             statistics.put("total", sd.getTotal());
             statistics.put("max", sd.getMax());
             statistics.put("clients", sd.getClients());
+            statistics.put("defaultPath", sd.getDefaultPath());
+            statistics.put("instanceProperties", sd.getInstanceProperties());
+            statistics.put("moduleProperties", sd.getModuleProperties());
+            statistics.put("modulePath", sd.getModulePath());
+            statistics.put("configPath", sd.getConfigPath());
             Project.projectStatistics.put(projectId,statistics);
         }
     }

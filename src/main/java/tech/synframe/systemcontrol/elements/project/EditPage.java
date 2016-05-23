@@ -23,6 +23,7 @@ public class EditPage extends Response {
     public String file;
     public String contents;
     public EditPage(WSHandler session, List<String> templateCache, Project p, String file){
+        project = p;
         boolean foundAttempt = false;
         try {
             Pattern regex = Pattern.compile("/");
@@ -48,7 +49,6 @@ public class EditPage extends Response {
             }catch (Exception e){
                 e.printStackTrace();
             }
-            project = p;
             this.setParent(".projectAction-wrapper"); // parent element, css selector
             this.setParentTemplate("wrapper"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)
             this.setAction("alone"); // how to transition the element to the new content

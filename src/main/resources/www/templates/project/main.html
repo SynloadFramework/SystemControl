@@ -1,0 +1,134 @@
+<div class="col-md-3">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="text-align:center;">Information</div>
+            <div class="panel-body">
+                <table class="table table-bordered" style="margin-bottom:0px;">
+                    <tr>
+                        <td>Title</td>
+                        <td>{{project.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Path</td>
+                        <td>{{project.path}}</td>
+                    </tr>
+                    <tr>
+                        <td>Port</td>
+                        <td>{{project.port}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <a href="javascript:;" class="btn btn-success startButton" style="display:none;width:100%;" onclick="startProject('{{project.id}}');">Start</a>
+                            <a href="javascript:;" class="btn btn-danger stopButton" style="display:none;width:100%;" onclick="stopProject('{{project.id}}');">Stop</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="text-align:center;">Statistics</div>
+            <div class="panel-body">
+                <table class="table table-bordered" style="margin-bottom:0px;">
+                    <tr>
+                        <td colspan="2"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> Disk Information</td>
+                    </tr>
+                    <tr>
+                        <td>Total Disk Space</td>
+                        <td class="totalDiskSpace">{{project.totalSpace|math>/1024/1024/1024|round}} GB</td>
+                    </tr>
+                    <tr>
+                        <td>Used Disk Space</td>
+                        <td class="usedDiskSpace">{{project|subtract>totalSpace>freeSpace|math>/1024/1024/1024|round}} GB</td>
+                    </tr>
+                    <tr>
+                        <td>Free Disk Space</td>
+                        <td class="freeDiskSpace">{{project.freeSpace|math>/1024/1024/1024|round}} GB</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><span class="glyphicon glyphicon-oil" aria-hidden="true"></span> Memory Information</td>
+                    </tr>
+                    <tr>
+                        <td>Total Memory</td>
+                        <td class="totalMemory">{{project.totalMemory|math>/1024/1024|round}} MB</td>
+                    </tr>
+                    <tr>
+                        <td>Used Memory</td>
+                        <td class="usedMemory">{{project|subtract>totalMemory>freeMemory|math>/1024/1024|round}} MB</td>
+                    </tr>
+                    <tr>
+                        <td>Free Memory</td>
+                        <td class="freeMemory">{{project.freeMemory|math>/1024/1024|round}} MB</td>
+                    </tr>
+                    <tr>
+                        <td>Max Memory</td>
+                        <td class="maxMemory">{{project.maxMemory|math>/1024/1024|round}} MB</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span> Other Statistics</td>
+                    </tr>
+                    <tr>
+                        <td>Connected Clients</td>
+                        <td class="connectedClients">{{project.clients}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td class="running">
+                            {{if project.running|equals>y}}<span class="label label-success">Running</span>{{else}}<span class="label label-danger">Stopped</span>{{/if}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-9 projectAction-wrapper">
+    <script>
+			_sf.request('get','projectdata',{"project":"{{project.id}}"});
+		</script>
+</div>
+<script>
+		if (typeof window.refreshStatsTimeout !== 'undefined') {
+			clearTimeout(window.refreshStatsTimeout);
+		}
+		$(".instanceTab").removeClass("active");
+		$(".tabID{{project.id}}").addClass("active");
+		var projectStatus = {};
+		function refreshStats(){
+			_sf.action('status','project',{"id":"{{project.id}}"},function(data){
+				if(data.p.project.running!="u"){
+					$('.totalDiskSpace').html(Math.round(data.p.project.totalSpace/1024/1024/1024)+" GB");
+					$('.freeDiskSpace').html(Math.round((data.p.project.totalSpace-data.p.project.totalSpace)/1024/1024/1024)+" GB");
+					$('.freeDiskSpace').html(Math.round(data.p.project.freeSpace/1024/1024/1024)+" GB");
+
+					$('.totalMemory').html(Math.round(data.p.project.totalMemory/1024/1024)+" MB");
+					$('.freeMemory').html(Math.round(data.p.project.freeMemory/1024/1024)+" MB");
+					$('.maxMemory').html(Math.round(data.p.project.maxMemory/1024/1024)+" MB");
+					$('.usedMemory').html(Math.round((data.p.project.totalMemory-data.p.project.freeMemory)/1024/1024)+" MB");
+
+					$('.connectedClients').html(data.p.project.clients);
+					var modulesHtml = "";
+					$.each(data.p.project.modules,function(i,v){
+						modulesHtml = modulesHtml +"<a href='javascript:;' class='list-group-item' onclick='loadModuleInfo('"+v+"','{{project.id}}');'>"+v+"</a>";
+					});
+					$('.modulesList').html(modulesHtml);
+					$('.running').html(((data.p.project.running=="y")?"<span class=\"label label-success\">Running</span>":"<span class=\"label label-danger\">Stopped</span>"));
+				}
+				projectStatus = data.p.project;
+				if(data.p.project.running=="y"){
+					$(".startButton").hide();
+					$(".stopButton").show();
+				}else{
+					$(".startButton").show();
+					$(".stopButton").hide();
+					$(".logInfo").html("");
+					lastlogid = 0;
+				}
+			});
+			window.refreshStatsTimeout = setTimeout(function(){
+				refreshStats();
+			},2000);
+		}
+		refreshStats();
+	</script>

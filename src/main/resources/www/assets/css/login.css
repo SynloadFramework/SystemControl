@@ -1,0 +1,34 @@
+body {
+	background-color: #eee;
+}
+.login-form{
+
+	margin:0px auto;
+	margin-bottom:40px;
+	margin-top:40px;
+	background:#fff;
+	border-radius:5px;
+	width:400px;
+	padding:10px;
+}
+.login-form h3{
+	font-style:italic;
+	color:#ccc;
+}
+.register-form{
+	margin:0px auto;
+	margin-bottom:40px;
+	margin-top:40px;
+	background:#fff;
+	width:400px;
+	display:none;
+	padding:10px;
+	border-radius:5px;
+}
+.register-form h3{
+	font-style:italic;
+	color:#ccc;
+}
+.form-group{
+
+}

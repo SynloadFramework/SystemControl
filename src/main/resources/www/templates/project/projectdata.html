@@ -1,0 +1,168 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Memory</div>
+            <div class="panel-body"><canvas class="memoryGraph" width="100%" height="40"></canvas></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Clients</div>
+            <div class="panel-body"><canvas class="clientsGraph" width="100%" height="40"></canvas></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Configuration</div>
+            <div class="panel-body">
+                <div class="list-group" style="margin-bottom:0px;">
+                    <a href="javascript:;" class='list-group-item' onclick="_sf.request('get','edit',{'project':'{{project.id}}', 'file':'config.ini'})"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Modify Main Configuration</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Modules Loaded</div>
+            <div class="panel-body">
+                <div class="list-group modulesList" style="margin-bottom:0px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Log Information <span style="float:right;">autoscroll <input type="checkbox" class="notautoscroll" checked="checked"></span></div>
+            <div class="panel-body">
+                <pre class="well well-sm logInfo" style="max-height:400px;"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+			if (typeof window.refreshLogTimeout !== 'undefined') {
+				clearTimeout(window.refreshLogTimeout);
+			}
+			if (typeof window.updateMemoryGraphTimeout !== 'undefined') {
+				clearTimeout(window.updateMemoryGraphTimeout);
+			}
+			if (typeof window.clientTimeout !== 'undefined') {
+				clearTimeout(window.clientTimeout);
+			}
+			var clientsGraphElement = $(".clientsGraph");
+			var clientsGraph = new Chart(clientsGraphElement,{
+				type: 'line',
+				data: {
+					datasets: [{
+						data: [0],
+						label: "Connected Clients",
+						fill: false,
+						lineTension: 0.1,
+						backgroundColor: "rgba(75,192,192,0.4)",
+						borderColor: "rgba(75,192,192,1)",
+						borderCapStyle: 'butt',
+						borderDash: [],
+						borderDashOffset: 0.0,
+						borderJoinStyle: 'miter',
+						pointBorderColor: "rgba(75,192,192,1)",
+						pointBackgroundColor: "#fff",
+						pointBorderWidth: 1,
+						pointHoverRadius: 5,
+						pointHoverBackgroundColor: "rgba(75,192,192,1)",
+						pointHoverBorderColor: "rgba(220,220,220,1)",
+						pointHoverBorderWidth: 2,
+						pointRadius: 1,
+						pointHitRadius: 10,
+					}],
+					labels: [0]
+				}
+			});
+			var lastlogid = 0;
+			function refreshLog(){
+				_sf.action('log','project',{"id":"{{project.id}}","lastid":lastlogid},function(data){
+					console.log(data.p);
+					$.each(data.p.log, function(i, line){
+						if(line.id>lastlogid){
+							lastlogid = line.id;
+						}
+						$(".logInfo").append(line.line+"\n");
+					});
+					if($(".notautoscroll").prop("checked")==true){
+						$('.logInfo').animate({
+							scrollTop: $(".logInfo").offset().top
+						}, 300);
+					}
+				});
+				window.refreshLogTimeout = setTimeout(function(){
+					refreshLog();
+				},2000);
+			}
+			refreshLog();
+			function transformClient(array){
+				for(var i=0;i<array.length;i++){
+					array[i] = (15*10-i*10)+" secs ago";
+				}
+				return array;
+			}
+			window.graphClientData = new Array();
+			var graphspeed=10;
+			function updateClientGraph(){
+				if(projectStatus.running=="y"){
+					window.graphClientData.push(projectStatus.clients);
+					if(window.graphClientData.length>15){
+						window.graphClientData.splice(0, 1);
+						graphspeed=10000;
+					}else{
+						graphspeed=10;
+					}
+					if(window.graphClientData.length>0){
+						if(window.graphClientData[0]==undefined){
+							window.graphClientData.splice(0, 1);
+						}
+					}
+					clientsGraph.data.datasets[0].data = window.graphClientData;
+					clientsGraph.data.labels = transformClient(Object.keys(window.graphClientData));
+					clientsGraph.update();
+				}else{
+					graphspeed=1000;
+				}
+				window.clientTimeout = setTimeout(function(){
+					updateClientGraph();
+				},graphspeed);
+			}
+			updateClientGraph();
+			var memoryGraphElement = $(".memoryGraph");
+			var memoryGraph = new Chart(memoryGraphElement,{
+				type: 'pie',
+				data: {
+					datasets: [{
+						data: [
+							0,
+							0
+						],
+						backgroundColor: [
+							"#FF6384",
+							"#4BC0C0"
+						],
+						label: 'Memory Usage' // for legend
+					}],
+					labels: [
+						"Used",
+						"Free"
+					]
+				}
+			});
+			function updateMemoryGraph(){
+				var graphData = [Math.round((projectStatus.totalMemory-projectStatus.freeMemory)/1024/1024),Math.round(projectStatus.freeMemory/1024/1024)];
+				memoryGraph.data.datasets[0].data = graphData;
+				memoryGraph.update();
+				updateMemoryGraphTimeout = setTimeout(function(){
+					updateMemoryGraph();
+				},4000);
+			}
+			updateMemoryGraph();
+		</script>

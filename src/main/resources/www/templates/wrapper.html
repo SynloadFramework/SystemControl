@@ -1,219 +1,48 @@
-<!-- BEGIN HEADER -->
-<div class="page-header">
-    <!-- BEGIN HEADER TOP -->
-    <div class="page-header-top">
-        <div class="container">
-            <!-- BEGIN LOGO -->
-            <div class="page-logo">
-                <a href="/">
-                    System Control
-                </a>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="page-header" style="border-bottom:none;">
+                <h4>Synload Framework <small>Instances</small></h4>
             </div>
-            <!-- END LOGO -->
-            <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-            <a href="javascript:;" class="menu-toggler"></a>
-            <!-- END RESPONSIVE MENU TOGGLER -->
-            <!-- BEGIN TOP NAVIGATION MENU -->
-            <div class="top-menu">
-                <ul class="nav navbar-nav pull-right">
-                    <!-- BEGIN NOTIFICATION DROPDOWN -->
-                    <li class="dropdown dropdown-extended dropdown-notification dropdown-dark" id="header_notification_bar">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <i class="icon-bell"></i>
-                            <span class="badge badge-default">0</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="external">
-                                <h3>You have
-                                    <strong>0 pending</strong> actions</h3>
-                            </li>
-                            <li>
-                                <ul class="dropdown-menu-list scroller pendingAction" style="height: 250px;" data-handle-color="#637283">
-
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- END NOTIFICATION DROPDOWN -->
-                    <li class="droddown dropdown-separator">
-                        <span class="separator"></span>
-                    </li>
-                    <!-- BEGIN USER LOGIN DROPDOWN -->
-                    <li class="dropdown dropdown-user dropdown-dark">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <span class="username username-hide-mobile">{{user.email}}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-default">
-                            <li>
-                                <a href="page_user_profile_1.html">
-                                    <i class="icon-user"></i> My Profile </a>
-                            </li>
-                            <li>
-                                <a href="app_inbox.html">
-                                    <i class="icon-envelope-open"></i> Instances Running
-                                    <span class="badge badge-danger"> 0 </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" onclick="logout();">
-                                    <i class="icon-key"></i> Log Out </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- END USER LOGIN DROPDOWN -->
+        </div>
+        <div class="col-md-4">
+            <div style="width:100%;text-align:center;">
+                <a href="/" class="logo"><img src="http://wiki.synframe.tech/images/logoSynloadFramework_small_Full.png"/></a>
+            </div>
+        </div>
+        <div class="col-md-4" style="text-align:right;">
+            <div style="margin-top:20px;">
+                <img src="http://www.gravatar.com/avatar/{{user.email|md5}}?s=50" style="border-radius:5px;border:2px solid #ccc;margin-right:20px;"/>
+                <a href="javascript:;" onclick="logout();">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 content-wrapper">
+        <div class="row" style="margin-bottom:20px;margin-top:10px;">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="tabDashboard instanceTab active"><a href="javascript:;" title="Create New Project" onclick="loadDashboard();">Dashboard</a></li>
+                    {{projects}}<li role="presentation" class="tabID{{id}} instanceTab"><a href="javascript:;" onclick="_sf.request('get','project',{'project':'{{id}}'});">{{name}}:{{port}}</a></li>{{/projects}}
+                    <li role="presentation" class="tabCreate instanceTab"><a href="javascript:;" title="Create New Project" onclick="_sf.requestSingle('get','createproject');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
                 </ul>
             </div>
-            <!-- END TOP NAVIGATION MENU -->
         </div>
-    </div>
-    <!-- END HEADER TOP -->
-    <!-- BEGIN HEADER MENU -->
-    <div class="page-header-menu">
-        <div class="container">
-            <!-- BEGIN HEADER SEARCH BOX -->
-            <form class="search-form" action="" method="GET">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="query">
-                            <span class="input-group-btn">
-                                <a href="javascript:;" class="btn submit">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </span>
-                </div>
-            </form>
-            <!-- BEGIN MEGA MENU -->
-            <!-- DOC: Apply "hor-menu-light" class after the "hor-menu" class below to have a horizontal menu with white background -->
-            <!-- DOC: Remove data-hover="dropdown" and data-close-others="true" attributes below to disable the dropdown opening on mouse hover -->
-            <div class="hor-menu  ">
-                <ul class="nav navbar-nav extraMenuItems">
-                    <li class="menu-dropdown classic-menu-dropdown active">
-                        <a href="javascript:;"> Dashboard
-                            <span class="arrow"></span>
-                        </a>
-                        <ul class="dropdown-menu pull-left dashboardMenuItems">
-                            <li class=" active">
-                                <a href="javascript:;" onclick="_sf.request('get','main_dashboard');" class="nav-link  active">
-                                    <i class="icon-bar-chart"></i> Main Dashboard
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- END MEGA MENU -->
-        </div>
-    </div>
-    <!-- END HEADER MENU -->
-</div>
-<!-- END HEADER -->
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-    <!-- BEGIN CONTENT -->
-    <div class="page-content-wrapper">
-        <!-- BEGIN CONTENT BODY -->
-        <!-- BEGIN PAGE HEAD-->
-        <div class="page-head">
-            <div class="container pageContainerHeader">
-                <!-- BEGIN PAGE TITLE -->
-                <div class="page-title">
-                    <h1>Dashboard
-                        <small>main dashboard</small>
-                    </h1>
-                </div>
-                <!-- END PAGE TITLE -->
-                <!-- BEGIN PAGE TOOLBAR -->
-                <div class="page-toolbar">
-                    <!-- BEGIN THEME PANEL -->
-                    <div class="btn-group btn-theme-panel">
-                        <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-settings"></i>
-                        </a>
-                        <div class="dropdown-menu theme-panel pull-right dropdown-custom hold-on-click">
-                            <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <h3>Setting Controls</h3>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <ul class="theme-colors">
-                                                <li class="theme-color theme-color-default" data-theme="default">
-                                                    <span class="theme-color-view"></span>
-                                                    <span class="theme-color-name">Default</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END THEME PANEL -->
-                </div>
-                <!-- END PAGE TOOLBAR -->
-            </div>
-        </div>
-        <!-- END PAGE HEAD-->
-        <!-- BEGIN PAGE CONTENT BODY -->
-        <div class="page-content">
-            <div class="container pageContainer">
-                <!-- BEGIN PAGE BREADCRUMBS -->
-                <ul class="page-breadcrumb breadcrumb">
-                    <li>
-                        <a href="/">Home</a>
-                        <i class="fa fa-circle"></i>
-                    </li>
-                    <li>
-                        <span>Main Dashboard</span>
-                    </li>
-                </ul>
-                <!-- END PAGE BREADCRUMBS -->
-                <!-- BEGIN PAGE CONTENT INNER -->
-                <div class="page-content-inner pageContainerInner">
-
-                </div>
-                <!-- END PAGE CONTENT INNER -->
-            </div>
-        </div>
-        <!-- END PAGE CONTENT BODY -->
-        <!-- END CONTENT BODY -->
-    </div>
-    <!-- END CONTENT -->
-    <!-- BEGIN QUICK SIDEBAR -->
-    <a href="javascript:;" class="page-quick-sidebar-toggler">
-        <i class="icon-login"></i>
-    </a>
-    <div class="page-quick-sidebar-wrapper" data-close-on-body-click="false">
-        <div class="page-quick-sidebar">
+        <div class="row project-wrapper">
 
         </div>
     </div>
-    <!-- END QUICK SIDEBAR -->
-</div>
-<!-- END CONTAINER -->
-<!-- BEGIN FOOTER -->
-<!-- BEGIN PRE-FOOTER -->
-<div class="page-prefooter">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 col-sm-6 col-xs-12 footer-block">
-                <h2>About</h2>
-                <p> Control panel for SynloadFramework site instances. </p>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12 footer-block">
-                <h2>Contacts</h2>
-                <address class="margin-bottom-40"> Phone: 831 204 0243
-                    <br> Email:
-                    <a href="mailto:nathaniel.davidson@gmail.com">nathaniel.davidson@gmail.com</a>
-                </address>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- END PRE-FOOTER -->
-<!-- BEGIN INNER FOOTER -->
-<div class="page-footer">
-    <div class="container"> 2016 &copy; System Control</div>
-</div>
-<div class="scroll-to-top">
-    <i class="icon-arrow-up"></i>
-</div>
-
+    <script type="text/javascript">
+    $(".cssHack").attr("href","/systemcontrol/assets/css/main.css");
+	_sf.update = function(){
+		var maxHeight = 0;
+		$('.panel-module').each(function(){
+			var tmpHeight = $(this).outerHeight();
+			if(tmpHeight>maxHeight){
+				maxHeight = tmpHeight;
+			}
+		});
+		$('.panel-module').css({'height':maxHeight+'px'});
+	};
+	_sf.update();
+	_sf.requestSingle('get','dashboard');
+</script>

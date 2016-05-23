@@ -6,6 +6,8 @@ import com.synload.framework.handlers.Request;
 import com.synload.framework.ws.annotations.WSEvent;
 import tech.synframe.systemcontrol.elements.dashboard.DashboardMain;
 import tech.synframe.systemcontrol.elements.project.CreateProjectPage;
+import tech.synframe.systemcontrol.elements.project.EditPage;
+import tech.synframe.systemcontrol.elements.project.ProjectDataPage;
 import tech.synframe.systemcontrol.elements.project.ProjectPage;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
@@ -56,6 +58,51 @@ public class ProjectElementWSEvents {
                             e.getRequest().getTemplateCache(),
                             user,
                             projects.get(0)
+                        )
+                    );
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+    @WSEvent(name="ProjectPageData", description="", enabled = true, method = "get", action = "projectdata")
+    public void projectPageData(RequestEvent e){
+        if(e.getSession().getSessionData().containsKey("user") && e.getRequest().getData().containsKey("project")){
+            int projectId = Integer.valueOf(e.getRequest().getData().get("project"));
+            User user = (User) e.getSession().getSessionData().get("user");
+            try {
+                List<Project> projects = Project._find(Project.class, "user=? and id=?", user.getId(), projectId).exec(Project.class);
+                if(projects.size()==1){
+                    e.respond(
+                        new ProjectDataPage(
+                            e.getSession(),
+                            e.getRequest().getTemplateCache(),
+                            user,
+                            projects.get(0)
+                        )
+                    );
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+    @WSEvent(name="EditPage", description="", enabled = true, method = "get", action = "edit")
+    public void editPage(RequestEvent e){
+        if(e.getSession().getSessionData().containsKey("user") && e.getRequest().getData().containsKey("project") && e.getRequest().getData().containsKey("file")){
+            int projectId = Integer.valueOf(e.getRequest().getData().get("project"));
+            String file = e.getRequest().getData().get("file");
+            User user = (User) e.getSession().getSessionData().get("user");
+            try {
+                List<Project> projects = Project._find(Project.class, "user=? and id=?", user.getId(), projectId).exec(Project.class);
+                if(projects.size()==1){
+                    e.respond(
+                        new EditPage(
+                            e.getSession(),
+                            e.getRequest().getTemplateCache(),
+                            projects.get(0),
+                            file
                         )
                     );
                 }

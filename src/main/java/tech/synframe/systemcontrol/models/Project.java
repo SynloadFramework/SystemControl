@@ -48,7 +48,7 @@ public class Project extends Model{
 
     @JsonIgnore
     public Properties instanceProperties;
-    
+
     @MediumIntegerColumn(length=20, AutoIncrement=true, Key=true)
     public long id;
 

@@ -35,6 +35,7 @@ public class EditPage extends Response {
         if(foundAttempt){
             // hack attempt / send to future attempt log
         }else{
+            this.file = file;
             File fileToOpen = new File(project.getPath()+file);
             this.setTemplateId("editpage-sc"); // set the template id (stored client side)
             if (!templateCache.contains(this.getTemplateId())) { // check to see if the client has this template

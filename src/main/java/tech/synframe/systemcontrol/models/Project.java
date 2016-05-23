@@ -39,17 +39,16 @@ public class Project extends Model{
     public String defaultPath = "";
     public String configPath = "";
     public String modulePath = "";
+    public List<Object> modules;
+    public long usableSpace = -1;
+    public String running = "u";
 
     @JsonIgnore
     public HashMap<String, Properties> moduleProperties = null;
 
     @JsonIgnore
     public Properties instanceProperties;
-
-    public List<Object> modules;
-    public long usableSpace = -1;
-    public String running = "u";
-
+    
     @MediumIntegerColumn(length=20, AutoIncrement=true, Key=true)
     public long id;
 

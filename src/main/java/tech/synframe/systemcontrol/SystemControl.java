@@ -5,6 +5,7 @@ import com.synload.framework.modules.ModuleClass;
 import com.synload.framework.modules.annotations.Module;
 import com.synload.framework.modules.annotations.Module.LogLevel;
 import tech.synframe.systemcontrol.models.PendingAction;
+import tech.synframe.systemcontrol.utils.NewVersionCheck;
 import tech.synframe.systemcontrol.utils.Queue;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class SystemControl extends ModuleClass {
 		// Sent when the module is run (after module elements loaded)
 		Log.info("Loaded System Control", SystemControl.class);
 		new Thread(new Queue()).start();
+		new Thread(new NewVersionCheck()).start();
 		try {
 			List<PendingAction> pending = PendingAction._find(PendingAction.class, "").exec(PendingAction.class);
 			for (PendingAction pa : pending) {

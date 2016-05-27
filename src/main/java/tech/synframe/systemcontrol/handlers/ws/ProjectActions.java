@@ -7,6 +7,7 @@ import com.synload.framework.Log;
 import com.synload.framework.handlers.Data;
 import com.synload.framework.ws.annotations.WSEvent;
 import com.synload.talksystem.statistics.StatisticDocument;
+import tech.synframe.systemcontrol.models.Modules;
 import tech.synframe.systemcontrol.models.PendingAction;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
@@ -17,10 +18,7 @@ import tech.synframe.systemcontrol.utils.Queue;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -372,6 +370,37 @@ public class ProjectActions {
             statistics.put("defaultPath", sd.getDefaultPath());
             statistics.put("instanceProperties", sd.getInstanceProperties());
             statistics.put("moduleProperties", sd.getModuleProperties());
+            for(Map.Entry<String, Properties> module: sd.getModuleProperties().entrySet()){
+                if(module.getValue().containsKey("jenkins")){
+                    String jenkinsUrl = (String) module.getValue().get("jenkins");
+                    int build = (Integer) module.getValue().get("build");
+                    String modName = (String) module.getValue().get("module");
+                    if(!Modules._exists(Modules.class, "jenkinsUrl=? and project=?", jenkinsUrl, projectId)){
+                        try {
+                            Modules mod = new Modules();
+                            mod.setJenkinsUrl(jenkinsUrl);
+                            mod.setName(modName);
+                            mod.setBuild(build);
+                            mod._insert();
+                            Project p = Project._find(Project.class, "id=?", projectId).exec(Project.class).get(0);
+                            mod._set(p);
+                        }catch (Exception err){
+                            err.printStackTrace();
+                        }
+                    }else{
+                        try {
+                            List<Modules> mods = Modules._find(Modules.class, "jenkinsUrl=?", jenkinsUrl).exec(Modules.class);
+                            if(mods.size()>0){
+                                Modules mod = mods.get(0);
+                                Project p = Project._find(Project.class, "id=?", projectId).exec(Project.class).get(0);
+                                mod._set(p);
+                            }
+                        }catch (Exception err){
+                            err.printStackTrace();
+                        }
+                    }
+                }
+            }
             statistics.put("modulePath", sd.getModulePath());
             statistics.put("configPath", sd.getConfigPath());
             Project.projectStatistics.put(projectId,statistics);

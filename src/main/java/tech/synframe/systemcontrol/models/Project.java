@@ -69,6 +69,13 @@ public class Project extends Model{
     @LongBlobColumn()
     public String pendingActions;
 
+    @MediumIntegerColumn(length = 1)
+    public int autoUpdate;
+
+    @HasMany(of=Modules.class, key="id")
+    @LongBlobColumn()
+    public String installedModules;
+
     public long getId() {
         return id;
     }
@@ -279,5 +286,29 @@ public class Project extends Model{
 
     public void setPendingActions(String pendingActions) {
         this.pendingActions = pendingActions;
+    }
+
+    public List<Object> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<Object> modules) {
+        this.modules = modules;
+    }
+
+    public String getInstalledModules() {
+        return installedModules;
+    }
+
+    public void setInstalledModules(String installedModules) {
+        this.installedModules = installedModules;
+    }
+
+    public int getAutoUpdate() {
+        return autoUpdate;
+    }
+
+    public void setAutoUpdate(int autoUpdate) {
+        this.autoUpdate = autoUpdate;
     }
 }

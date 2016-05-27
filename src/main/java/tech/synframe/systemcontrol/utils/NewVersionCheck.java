@@ -182,7 +182,7 @@ public class NewVersionCheck implements Runnable {
 
                         m._save("build", latestBuild);
 
-                        if (updated.contains(project))
+                        if (!updated.contains(project))
                             updated.add(project);
                     }
                 }

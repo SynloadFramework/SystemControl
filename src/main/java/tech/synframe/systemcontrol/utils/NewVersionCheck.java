@@ -24,7 +24,7 @@ public class NewVersionCheck implements Runnable {
             try {
                 List<Modules> modules = Modules._find(Modules.class, "").exec(Modules.class);
                 for(Modules m: modules) {
-                    if(m.getName().equalsIgnoreCase("synloadframework")) {
+                    if(!m.getName().equalsIgnoreCase("synloadframework")) {
                         Project project = null;
                         if (projects.containsKey(m.getProject())) {
                             project = projects.get(m.getProject());
@@ -163,6 +163,8 @@ public class NewVersionCheck implements Runnable {
                     downloadModule(m, latest);
 
                     m.setBuild(latestBuild);
+
+                    m._save("build",latestBuild);
 
                     if(updated.contains(project))
                         updated.add(project);

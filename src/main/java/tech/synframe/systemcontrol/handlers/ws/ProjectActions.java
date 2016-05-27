@@ -390,8 +390,10 @@ public class ProjectActions {
                     }else{
                         try {
                             Modules mod = Modules._find(Modules.class, "jenkinsUrl=? and project=?", jenkinsUrl, projectId).exec(Modules.class).get(0);
-                            mod.setBuild(build);
-                            mod._save("build", build);
+                            if(mod.getBuild()!=build) {
+                                mod.setBuild(build);
+                                mod._save("build", build);
+                            }
                         }catch (Exception e1){
                             e1.printStackTrace();
                         }

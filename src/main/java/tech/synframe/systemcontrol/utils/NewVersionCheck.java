@@ -125,7 +125,7 @@ public class NewVersionCheck implements Runnable {
     }
     public boolean downloadModule(Modules m, Project p, JsonNode jn){
         if(jn.getObject().has("artifacts")){
-            if(jn.getObject().getJSONArray("artifacts").getJSONObject(0).length()>0) {
+            if(jn.getObject().getJSONArray("artifacts").length()>0) {
                 String jenkins = m.getJenkinsUrl();
                 if(!jenkins.endsWith("/")){
                     jenkins=jenkins+"/";

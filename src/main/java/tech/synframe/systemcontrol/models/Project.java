@@ -143,7 +143,9 @@ public class Project extends Model{
                     }
                     if(projectStatistics.get(this.getId()).containsKey("moduleProperties")) {
                         moduleProperties = (HashMap<String, Properties>) projectStatistics.get(this.getId()).get("moduleProperties");
-                        modules = Arrays.asList(moduleProperties.keySet().toArray());
+                        for(Map.Entry<String, Properties> mod : moduleProperties.entrySet()){
+                            modules.add(new Object[]{mod.getKey(), mod.getValue().get("author"), mod.getValue().get("build"), mod.getValue().get("version")});
+                        }
                     }
                     if(projectStatistics.get(this.getId()).containsKey("instanceProperties")) {
                         instanceProperties = (Properties) projectStatistics.get(this.getId()).get("instanceProperties");

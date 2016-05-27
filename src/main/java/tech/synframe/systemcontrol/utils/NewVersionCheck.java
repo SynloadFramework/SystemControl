@@ -24,20 +24,22 @@ public class NewVersionCheck implements Runnable {
             try {
                 List<Modules> modules = Modules._find(Modules.class, "").exec(Modules.class);
                 for(Modules m: modules) {
-                    Project project = null;
-                    if(projects.containsKey(m.getProject())){
-                        project = projects.get(m.getProject());
-                    }else{
-                        List<Project> prs = m._related(Project.class).exec(Project.class);
-                        if(prs.size()>0) {
-                            project = m._related(Project.class).exec(Project.class).get(0);
-                            projects.put(m.getProject(), project);
+                    if(m.getName().equalsIgnoreCase("synloadframework")) {
+                        Project project = null;
+                        if (projects.containsKey(m.getProject())) {
+                            project = projects.get(m.getProject());
+                        } else {
+                            List<Project> prs = m._related(Project.class).exec(Project.class);
+                            if (prs.size() > 0) {
+                                project = m._related(Project.class).exec(Project.class).get(0);
+                                projects.put(m.getProject(), project);
+                            }
                         }
-                    }
-                    if (project.getAutoUpdate() == 1){
-                        int updated = checkUpdateModule(m);
-                        if (updated != -1) {
-                            updateProject(m, updated);
+                        if (project.getAutoUpdate() == 1) {
+                            int updated = checkUpdateModule(m);
+                            if (updated != -1) {
+                                updateProject(m, updated);
+                            }
                         }
                     }
                 }

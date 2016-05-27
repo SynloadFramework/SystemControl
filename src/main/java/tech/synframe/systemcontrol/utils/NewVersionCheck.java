@@ -48,19 +48,21 @@ public class NewVersionCheck implements Runnable {
                 e.printStackTrace();
             }
             for(Project p : updated){
-                try {
-                    PendingAction pStop = new PendingAction();
-                    pStop.setAction("stop");
-                    pStop.setProject(p.getId());
-                    pStop._insert();
-                    Queue.add(pStop);
-                    PendingAction pStart = new PendingAction();
-                    pStart.setAction("start");
-                    pStart.setProject(p.getId());
-                    pStart._insert();
-                    Queue.add(pStart);
-                }catch (Exception e){
-                    e.printStackTrace();
+                if(p.instance().isRunning()) {
+                    try {
+                        PendingAction pStop = new PendingAction();
+                        pStop.setAction("stop");
+                        pStop.setProject(p.getId());
+                        pStop._insert();
+                        Queue.add(pStop);
+                        PendingAction pStart = new PendingAction();
+                        pStart.setAction("start");
+                        pStart.setProject(p.getId());
+                        pStart._insert();
+                        Queue.add(pStart);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             try {

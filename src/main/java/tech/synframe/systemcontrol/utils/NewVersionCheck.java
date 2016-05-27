@@ -77,7 +77,7 @@ public class NewVersionCheck implements Runnable {
                 apiRequest = apiRequest + "/";
             }
             apiRequest=apiRequest+"api/json?tree=builds[number]";
-            //Log.info(Unirest.post(apiRequest).asString().getBody(),NewVersionCheck.class);
+            Log.info(Unirest.post(apiRequest).asString().getBody(),NewVersionCheck.class);
             HttpResponse<JsonNode> response = Unirest.post(apiRequest).asJson();
             if(response.getBody().getObject().has("builds")){
                 if(response.getBody().getObject().getJSONArray("builds").length()>0){
@@ -100,7 +100,7 @@ public class NewVersionCheck implements Runnable {
         }
         apiRequest=apiRequest+build+"/api/json";
         try {
-            //Log.info(Unirest.post(apiRequest).asString().getBody(),NewVersionCheck.class);
+            Log.info(Unirest.post(apiRequest).asString().getBody(),NewVersionCheck.class);
             return Unirest.post(apiRequest).asJson().getBody();
         }catch (Exception e){
             e.printStackTrace();

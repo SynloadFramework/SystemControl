@@ -48,20 +48,22 @@ public class NewVersionCheck implements Runnable {
                 e.printStackTrace();
             }
             for(Project p : updated){
-                if(p.instance().isRunning()) {
-                    try {
-                        PendingAction pStop = new PendingAction();
-                        pStop.setAction("stop");
-                        pStop.setProject(p.getId());
-                        pStop._insert();
-                        Queue.add(pStop);
-                        PendingAction pStart = new PendingAction();
-                        pStart.setAction("start");
-                        pStart.setProject(p.getId());
-                        pStart._insert();
-                        Queue.add(pStart);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                if(p.instance()!=null) {
+                    if (p.instance().isRunning()) {
+                        try {
+                            PendingAction pStop = new PendingAction();
+                            pStop.setAction("stop");
+                            pStop.setProject(p.getId());
+                            pStop._insert();
+                            Queue.add(pStop);
+                            PendingAction pStart = new PendingAction();
+                            pStart.setAction("start");
+                            pStart.setProject(p.getId());
+                            pStart._insert();
+                            Queue.add(pStart);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -174,7 +176,7 @@ public class NewVersionCheck implements Runnable {
                 if(latest.getObject().getString("result").equalsIgnoreCase("success")) {
                     JsonNode previous = getBuildInfo(m, m.getBuild());
                     if (previous != null && latest != null) {
-    
+
                         if (downloadModule(m, project, latest)) {
 
                             deleteBuild(m, project, previous); // delete old version

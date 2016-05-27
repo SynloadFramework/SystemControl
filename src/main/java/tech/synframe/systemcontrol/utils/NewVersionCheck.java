@@ -123,7 +123,7 @@ public class NewVersionCheck implements Runnable {
             }
         }
     }
-    public void downloadModule(Modules m, Project p, JsonNode jn){
+    public boolean downloadModule(Modules m, Project p, JsonNode jn){
         if(jn.getObject().has("artifacts")){
             if(jn.getObject().getJSONArray("artifacts").getJSONObject(0).length()>0) {
                 String jenkins = m.getJenkinsUrl();
@@ -144,11 +144,25 @@ public class NewVersionCheck implements Runnable {
                     if(!(new File("./artifactCache/"+number+"-"+filename)).exists()){
                         FileUtils.copyURLToFile(new URL(downloadUrl), new File("./artifactCache/"+number+"-"+filename));
                     }
-                    FileUtils.copyFile(new File("./artifactCache/"+number+"-"+filename), new File(mPath+filename));
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+                return true;
             }
+        }
+        return false;
+    }
+    public void installNewVersion(Modules m, Project p, JsonNode jn){
+        String mPath = p.getModulePath();
+        if(!mPath.endsWith("/")){
+            mPath=mPath+"/";
+        }
+        int number = jn.getObject().getInt("number");
+        String filename = jn.getObject().getJSONArray("artifacts").getJSONObject(0).getString("fileName");
+        try {
+            FileUtils.copyFile(new File("./artifactCache/" + number + "-" + filename), new File(mPath + filename));
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
     public void updateProject(Modules m, Project project, int latestBuild){
@@ -158,17 +172,19 @@ public class NewVersionCheck implements Runnable {
                 JsonNode previous = getBuildInfo(m, m.getBuild());
                 if(previous!=null && latest!=null) {
 
-                    deleteBuild(m, project, previous); // delete old version
+                    if(downloadModule(m, project, latest)) {
 
-                    downloadModule(m, project, latest);
+                        deleteBuild(m, project, previous); // delete old version
 
-                    m.setBuild(latestBuild);
+                        installNewVersion(m, project, latest); // install new version
 
-                    m._save("build",latestBuild);
+                        m.setBuild(latestBuild);
 
-                    if(updated.contains(project))
-                        updated.add(project);
+                        m._save("build", latestBuild);
 
+                        if (updated.contains(project))
+                            updated.add(project);
+                    }
                 }
             }
         }catch(Exception e){

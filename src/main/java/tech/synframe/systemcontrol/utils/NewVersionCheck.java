@@ -170,22 +170,24 @@ public class NewVersionCheck implements Runnable {
     public void updateProject(Modules m, Project project, int latestBuild){
         try {
             JsonNode latest = getBuildInfo(m, latestBuild);
-            if(latest.getObject().getString("result").equalsIgnoreCase("success")) {
-                JsonNode previous = getBuildInfo(m, m.getBuild());
-                if(previous!=null && latest!=null) {
+            if(latest.getObject().has("result")){
+                if(latest.getObject().getString("result").equalsIgnoreCase("success")) {
+                    JsonNode previous = getBuildInfo(m, m.getBuild());
+                    if (previous != null && latest != null) {
+    
+                        if (downloadModule(m, project, latest)) {
 
-                    if(downloadModule(m, project, latest)) {
+                            deleteBuild(m, project, previous); // delete old version
 
-                        deleteBuild(m, project, previous); // delete old version
+                            installNewVersion(m, project, latest); // install new version
 
-                        installNewVersion(m, project, latest); // install new version
+                            m.setBuild(latestBuild);
 
-                        m.setBuild(latestBuild);
+                            m._save("build", latestBuild);
 
-                        m._save("build", latestBuild);
-
-                        if (!updated.contains(project))
-                            updated.add(project);
+                            if (!updated.contains(project))
+                                updated.add(project);
+                        }
                     }
                 }
             }

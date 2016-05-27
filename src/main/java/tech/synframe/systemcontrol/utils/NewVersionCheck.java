@@ -67,6 +67,7 @@ public class NewVersionCheck implements Runnable {
                     }
                 }
             }
+            updated = new ArrayList<Project>();
             try {
                 Thread.sleep(1000);
             }catch(Exception e){

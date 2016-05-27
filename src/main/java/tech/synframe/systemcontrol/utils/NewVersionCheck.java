@@ -174,7 +174,7 @@ public class NewVersionCheck implements Runnable {
         try {
             JsonNode latest = getBuildInfo(m, latestBuild);
             if(latest.getObject().has("result")){
-                if(latest.getObject().getString("result").equalsIgnoreCase("success")) {
+                if(latest.getObject().get("result")!=null && latest.getObject().getString("result").equalsIgnoreCase("success")) {
                     JsonNode previous = getBuildInfo(m, m.getBuild());
                     if (previous != null && latest != null) {
 

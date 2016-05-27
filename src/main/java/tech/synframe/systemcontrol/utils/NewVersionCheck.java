@@ -3,6 +3,7 @@ package tech.synframe.systemcontrol.utils;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.synload.framework.Log;
 import org.apache.commons.io.FileUtils;
 import tech.synframe.systemcontrol.models.Modules;
 import tech.synframe.systemcontrol.models.PendingAction;
@@ -36,9 +37,9 @@ public class NewVersionCheck implements Runnable {
                             }
                         }
                         if (project.getAutoUpdate() == 1) {
-                            int updated = checkUpdateModule(m);
+                            int updated = checkUpdateModule(m, project);
                             if (updated != -1) {
-                                updateProject(m, updated);
+                                updateProject(m, project, updated);
                             }
                         }
                     }
@@ -69,13 +70,14 @@ public class NewVersionCheck implements Runnable {
             }
         }
     }
-    public int checkUpdateModule(Modules m){
+    public int checkUpdateModule(Modules m, Project project){
         try {
             String apiRequest = m.getJenkinsUrl();
             if(!apiRequest.endsWith("/")){
                 apiRequest = apiRequest + "/";
             }
             apiRequest=apiRequest+"api/json?tree=builds[number]";
+            Log.info(Unirest.post(apiRequest).asString().getBody(),NewVersionCheck.class);
             HttpResponse<JsonNode> response = Unirest.post(apiRequest).asJson();
             if(response.getBody().getObject().has("builds")){
                 if(response.getBody().getObject().getJSONArray("builds").length()>0){
@@ -98,18 +100,18 @@ public class NewVersionCheck implements Runnable {
         }
         apiRequest=apiRequest+build+"/api/json";
         try {
+            Log.info(Unirest.post(apiRequest).asString().getBody(),NewVersionCheck.class);
             return Unirest.post(apiRequest).asJson().getBody();
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
     }
-    public void deleteBuild(Modules m, JsonNode jn){
+    public void deleteBuild(Modules m, Project p, JsonNode jn){
         if(jn.getObject().has("artifacts")){
             if(jn.getObject().getJSONArray("artifacts").getJSONObject(0).length()>0) {
                 String filename = jn.getObject().getJSONArray("artifacts").getJSONObject(0).getString("fileName");
                 try {
-                    Project p = m._related(Project.class).exec(Project.class).get(0);
                     String mPath = p.getModulePath();
                     if(!mPath.endsWith("/")){
                         mPath=mPath+"/";
@@ -121,7 +123,7 @@ public class NewVersionCheck implements Runnable {
             }
         }
     }
-    public void downloadModule(Modules m, JsonNode jn){
+    public void downloadModule(Modules m, Project p, JsonNode jn){
         if(jn.getObject().has("artifacts")){
             if(jn.getObject().getJSONArray("artifacts").getJSONObject(0).length()>0) {
                 String jenkins = m.getJenkinsUrl();
@@ -129,7 +131,6 @@ public class NewVersionCheck implements Runnable {
                     jenkins=jenkins+"/";
                 }
                 try {
-                    Project p = m._related(Project.class).exec(Project.class).get(0);
                     String mPath = p.getModulePath();
                     if(!mPath.endsWith("/")){
                         mPath=mPath+"/";
@@ -150,17 +151,16 @@ public class NewVersionCheck implements Runnable {
             }
         }
     }
-    public void updateProject(Modules m, int latestBuild){
+    public void updateProject(Modules m, Project project, int latestBuild){
         try {
             JsonNode latest = getBuildInfo(m, latestBuild);
             if(latest.getObject().getString("result").equalsIgnoreCase("success")) {
-                Project project = m._related(Project.class).exec(Project.class).get(0);
                 JsonNode previous = getBuildInfo(m, m.getBuild());
                 if(previous!=null && latest!=null) {
 
-                    deleteBuild(m, previous); // delete old version
+                    deleteBuild(m, project, previous); // delete old version
 
-                    downloadModule(m, latest);
+                    downloadModule(m, project, latest);
 
                     m.setBuild(latestBuild);
 

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Nathaniel on 5/26/2016.
  */
-@SQLTable(name = "Modules", version = 0.1, description = "Modules running in the instances")
+@SQLTable(name = "Modules", version = 0.2, description = "Modules running in the instances")
 public class Modules extends Model {
 
 

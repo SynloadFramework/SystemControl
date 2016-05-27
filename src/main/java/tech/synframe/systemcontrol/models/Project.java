@@ -15,7 +15,7 @@ import java.util.*;
  */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
-@SQLTable(name = "Project Model", version = 0.1, description = "Instances of synframe project")
+@SQLTable(name = "Project Model", version = 0.2, description = "Instances of synframe project")
 public class Project extends Model{
 
     public static Map<Long, Map<String, Object>> projectStatistics = new HashMap<Long, Map<String, Object>>();

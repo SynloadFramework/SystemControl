@@ -14,7 +14,7 @@ import java.sql.ResultSet;
  */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
-@SQLTable(name = "pending Action", version = 0.1, description = "pending actions for project")
+@SQLTable(name = "pending Action", version = 0.2, description = "pending actions for project")
 public class PendingAction extends Model{
     public PendingAction(ResultSet rs) {
         super(rs);

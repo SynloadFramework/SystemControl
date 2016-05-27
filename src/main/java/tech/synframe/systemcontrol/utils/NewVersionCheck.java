@@ -160,6 +160,8 @@ public class NewVersionCheck implements Runnable {
 
                     downloadModule(m, latest);
 
+                    m.setBuild(latestBuild);
+
                     if(updated.contains(project))
                         updated.add(project);
 

@@ -373,7 +373,7 @@ public class ProjectActions {
             for(Map.Entry<String, Properties> module: sd.getModuleProperties().entrySet()){
                 if(module.getValue().containsKey("jenkins")){
                     String jenkinsUrl = (String) module.getValue().get("jenkins");
-                    int build = (Integer) module.getValue().get("build");
+                    int build = Integer.valueOf((String)module.getValue().get("build"));
                     String modName = (String) module.getValue().get("module");
                     if(!Modules._exists(Modules.class, "jenkinsUrl=? and project=?", jenkinsUrl, projectId)){
                         try {
@@ -384,17 +384,6 @@ public class ProjectActions {
                             mod._insert();
                             Project p = Project._find(Project.class, "id=?", projectId).exec(Project.class).get(0);
                             mod._set(p);
-                        }catch (Exception err){
-                            err.printStackTrace();
-                        }
-                    }else{
-                        try {
-                            List<Modules> mods = Modules._find(Modules.class, "jenkinsUrl=?", jenkinsUrl).exec(Modules.class);
-                            if(mods.size()>0){
-                                Modules mod = mods.get(0);
-                                Project p = Project._find(Project.class, "id=?", projectId).exec(Project.class).get(0);
-                                mod._set(p);
-                            }
                         }catch (Exception err){
                             err.printStackTrace();
                         }

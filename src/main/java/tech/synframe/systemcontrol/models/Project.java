@@ -40,7 +40,7 @@ public class Project extends Model{
     public String defaultPath = "";
     public String configPath = "";
     public String modulePath = "";
-    public List<Object> modules;
+    public List<Object> modules = new ArrayList<Object>();
     public long usableSpace = -1;
     public String running = "u";
 
@@ -143,7 +143,7 @@ public class Project extends Model{
                         configPath = (String) projectStatistics.get(this.getId()).get("configPath");
                     }
                     if(projectStatistics.get(this.getId()).containsKey("moduleProperties")) {
-                        moduleProperties = (HashMap<String, Properties>) projectStatistics.get(this.getId()).get("moduleProperties");
+                        moduleProperties = new HashMap<String, Properties>((HashMap<String, Properties>)projectStatistics.get(this.getId()).get("moduleProperties"));
                         for(Map.Entry<String, Properties> mod : moduleProperties.entrySet()){
                             //Log.info("d="+mod.getValue().toString(), Project.class);
                             if(mod.getValue()==null){

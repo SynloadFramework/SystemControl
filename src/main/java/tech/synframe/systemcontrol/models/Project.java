@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.synload.framework.Log;
 import com.synload.framework.modules.annotations.sql.*;
 import com.synload.framework.sql.Model;
-import tech.synframe.systemcontrol.utils.ExecuteShellSynFrame;
+import tech.synframe.systemcontrol.utils.*;
+import tech.synframe.systemcontrol.utils.Queue;
 
 import java.io.File;
 import java.sql.ResultSet;
@@ -16,7 +17,7 @@ import java.util.*;
  */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
-@SQLTable(name = "Project Model", version = 0.2, description = "Instances of synframe project")
+@SQLTable(name = "Project Model", version = 0.3, description = "Instances of synframe project")
 public class Project extends Model{
 
     public static Map<Long, Map<String, Object>> projectStatistics = new HashMap<Long, Map<String, Object>>();
@@ -65,6 +66,9 @@ public class Project extends Model{
     @HasOne(of=User.class, key="id")
     @MediumIntegerColumn(length = 20)
     public long user;
+
+    @MediumIntegerColumn(length = 1)
+    public int autostart;
 
     @HasMany(of=PendingAction.class, key="id")
     @LongBlobColumn()
@@ -149,7 +153,7 @@ public class Project extends Model{
                             if(mod.getValue()==null){
                                 Log.info("error, property data for "+mod.getKey(), Project.class);
                             }else {
-                                modules.add(new Object[]{mod.getKey(), mod.getValue().getProperty("author"), mod.getValue().getProperty("build"), mod.getValue().getProperty("version")});
+                                modules.add(new Object[]{mod.getKey(), mod.getValue().getProperty("author"), mod.getValue().getProperty("build"), mod.getValue().getProperty("version"), mod.getValue().getProperty("jenkins")});
                             }
                         }
                     }
@@ -174,6 +178,28 @@ public class Project extends Model{
             return ExecuteShellSynFrame.instances.get(getId());
         }
         return null;
+    }
+    public void start(){
+        try {
+            PendingAction pa = new PendingAction();
+            pa.setAction("start");
+            pa.setProject(this.getId());
+            pa._insert();
+            Queue.add(pa);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void stop(){
+        try {
+            PendingAction pa = new PendingAction();
+            pa.setAction("stop");
+            pa.setProject(this.getId());
+            pa._insert();
+            Queue.add(pa);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static Map<Long, Map<String, Object>> getProjectStatistics() {
@@ -319,4 +345,13 @@ public class Project extends Model{
     public void setAutoUpdate(int autoUpdate) {
         this.autoUpdate = autoUpdate;
     }
+
+    public int getAutostart() {
+        return autostart;
+    }
+
+    public void setAutostart(int autostart) {
+        this.autostart = autostart;
+    }
+
 }

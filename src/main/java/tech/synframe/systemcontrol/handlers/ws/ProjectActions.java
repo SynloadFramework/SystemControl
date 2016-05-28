@@ -27,6 +27,7 @@ import java.util.regex.PatternSyntaxException;
  * Created by Nathaniel on 5/6/2016.
  */
 public class ProjectActions {
+
     @WSEvent(method = "create", action = "project", description = "Create instance", enabled = true, name = "CreateNewInstance")
     public void create(RequestEvent e){
         HashMap<String, Object> objects = new HashMap<String, Object>();
@@ -118,60 +119,6 @@ public class ProjectActions {
         );
     }
 
-    @WSEvent(method = "save", action = "edit", description = "Save an edited file", enabled = true, name = "SaveEdit")
-    public void save(RequestEvent e){
-        HashMap<String, Object> objects = new HashMap<String, Object>();
-        if(
-            e.getSession().getSessionData().containsKey("user") &&
-            e.getRequest().getData().containsKey("project") &&
-            e.getRequest().getData().containsKey("file") &&
-            e.getRequest().getData().containsKey("contents")
-        ){
-            long instance = Long.valueOf(e.getRequest().getData().get("project"));
-            String file = e.getRequest().getData().get("file");
-            String contents = e.getRequest().getData().get("contents");
-            User u = (User) e.getSession().getSessionData().get("user");
-            try {
-                List<Project> projects = Project._find(Project.class, "id=?", instance).exec(Project.class);
-                if(projects.size()==1){
-                    Project proj = projects.get(0);
-                    boolean foundAttempt = false;
-                    try {
-                        Pattern regex = Pattern.compile("/");
-                        Matcher regexMatcher = regex.matcher(file);
-                        foundAttempt = regexMatcher.find();
-                    } catch (PatternSyntaxException ex) {
-                        // Syntax error in the regular expression
-                    }
-                    if(foundAttempt){
-                        // hack attempt / send to future attempt log
-                    }else{
-                        File fileToOpen = new File(proj.getPath()+file);
-                        Files.write(fileToOpen.toPath(), contents.getBytes("UTF-8"));
-                        objects.put("status", "success");
-                        objects.put("error", "saved");
-                    }
-                }else{
-                    objects.put("status", "error");
-                    objects.put("error", "notexist");
-                }
-            }catch (Exception x){
-                objects.put("status", "error");
-                objects.put("error", "sqlerror");
-            }
-        }else{
-            Log.info("Not logged in", ProjectActions.class);
-            objects.put("status", "error");
-            objects.put("error", "notloggedin");
-        }
-        e.respond(
-            new Data(
-                objects,
-                "saveEdit"
-            )
-        );
-    }
-
     @WSEvent(method = "delete", action = "project", description = "Delete a project by id", enabled = true, name = "DeleteProject")
     public void delete(RequestEvent e){
         if(
@@ -192,6 +139,7 @@ public class ProjectActions {
             Log.info("Not logged in", ProjectActions.class);
         }
     }
+
     @WSEvent(method = "status", action = "project", description = "Show project running status", enabled = true, name = "StatusProject")
     public void status(RequestEvent e){
         HashMap<String, Object> objects = new HashMap<String, Object>();
@@ -226,6 +174,7 @@ public class ProjectActions {
             )
         );
     }
+
     @WSEvent(method = "log", action = "project", description = "Show project running status", enabled = true, name = "StatusProject")
     public void log(RequestEvent e){
         HashMap<String, Object> objects = new HashMap<String, Object>();
@@ -274,6 +223,7 @@ public class ProjectActions {
                 )
         );
     }
+
     @WSEvent(method = "start", action = "project", description = "Start a project by id", enabled = true, name = "StartProject")
     public void start(RequestEvent e){
         HashMap<String, Object> objects = new HashMap<String, Object>();
@@ -286,11 +236,7 @@ public class ProjectActions {
             try{
                 final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
                 if(project.size()>0) {
-                    PendingAction pa = new PendingAction();
-                    pa.setProject(project.get(0).getId());
-                    pa.setAction("start");
-                    pa._insert();
-                    Queue.add(pa);
+                    project.get(0).start();
                     objects.put("status", "success");
                     project.get(0).checkStatus();
                     objects.put("project", project.get(0));
@@ -314,6 +260,7 @@ public class ProjectActions {
             )
         );
     }
+
     @WSEvent(method = "stop", action = "project", description = "Stop a project by id", enabled = true, name = "StopProject")
     public void stop(RequestEvent e){
         HashMap<String, Object> objects = new HashMap<String, Object>();
@@ -326,11 +273,7 @@ public class ProjectActions {
             try{
                 final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
                 if(project.size()>0) {
-                    PendingAction pa = new PendingAction();
-                    pa.setAction("stop");
-                    pa.setProject(project.get(0).getId());
-                    pa._insert();
-                    Queue.add(pa);
+                    project.get(0).stop();
                     objects.put("status", "success");
                     project.get(0).checkStatus();
                     objects.put("project", project.get(0));
@@ -405,4 +348,5 @@ public class ProjectActions {
             Project.projectStatistics.put(projectId,statistics);
         }
     }
+
 }

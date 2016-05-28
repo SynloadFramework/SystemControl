@@ -51,16 +51,8 @@ public class NewVersionCheck implements Runnable {
                 if(p.instance()!=null) {
                     if (p.instance().isRunning()) {
                         try {
-                            PendingAction pStop = new PendingAction();
-                            pStop.setAction("stop");
-                            pStop.setProject(p.getId());
-                            pStop._insert();
-                            Queue.add(pStop);
-                            PendingAction pStart = new PendingAction();
-                            pStart.setAction("start");
-                            pStart.setProject(p.getId());
-                            pStart._insert();
-                            Queue.add(pStart);
+                            p.stop();
+                            p.start();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

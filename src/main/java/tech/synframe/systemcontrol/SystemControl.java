@@ -5,6 +5,7 @@ import com.synload.framework.modules.ModuleClass;
 import com.synload.framework.modules.annotations.Module;
 import com.synload.framework.modules.annotations.Module.LogLevel;
 import tech.synframe.systemcontrol.models.PendingAction;
+import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.utils.NewVersionCheck;
 import tech.synframe.systemcontrol.utils.Queue;
 
@@ -25,6 +26,14 @@ public class SystemControl extends ModuleClass {
 			List<PendingAction> pending = PendingAction._find(PendingAction.class, "").exec(PendingAction.class);
 			for (PendingAction pa : pending) {
 				Queue.add(pa);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		try {
+			List<Project> projects = Project._find(Project.class, "autostart=?", 1).exec(Project.class);
+			for (Project p : projects) {
+				p.start();
 			}
 		}catch (Exception e){
 			e.printStackTrace();

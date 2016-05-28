@@ -36,7 +36,11 @@ public class InfoModulePage extends Response {
         module = m;
         info = NewVersionCheck.getBuildInfoString(module, module.getBuild());
         if(!module.getFile().equals("")) {
-            hash = sha1(new File(project.modulePath + module.getFile()));
+            String path = project.getModulePath();
+            if(!path.endsWith("/")){
+                path=path+"/";
+            }
+            hash = sha1(new File( path + module.getFile()));
         }
         this.setParent(".projectAction-wrapper"); // parent element, css selector
         this.setParentTemplate("wrapper"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)

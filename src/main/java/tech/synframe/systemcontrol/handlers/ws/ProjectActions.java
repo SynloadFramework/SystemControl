@@ -1,5 +1,6 @@
 package tech.synframe.systemcontrol.handlers.ws;
 
+import com.mashape.unirest.http.JsonNode;
 import com.synload.eventsystem.events.RequestEvent;
 import com.synload.eventsystem.events.STMessageReceivedEvent;
 import com.synload.eventsystem.events.annotations.Event;
@@ -11,9 +12,7 @@ import tech.synframe.systemcontrol.models.Modules;
 import tech.synframe.systemcontrol.models.PendingAction;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
-import tech.synframe.systemcontrol.utils.ActionEnum;
-import tech.synframe.systemcontrol.utils.ConsoleLine;
-import tech.synframe.systemcontrol.utils.ExecuteShellSynFrame;
+import tech.synframe.systemcontrol.utils.*;
 import tech.synframe.systemcontrol.utils.Queue;
 
 import java.io.File;
@@ -329,6 +328,16 @@ public class ProjectActions {
                             mod._insert();
                             Project p = Project._find(Project.class, "id=?", projectId).exec(Project.class).get(0);
                             mod._set(p);
+                            JsonNode latest = NewVersionCheck.getBuildInfo(mod,  mod.getBuild());
+                            if(latest.getObject().has("artifacts")) {
+                                if(latest.getObject().getJSONArray("artifacts").length() > 0) {
+                                    if(latest.getObject().getJSONArray("artifacts").getJSONObject(0).has("fileName")) {
+                                        String filename = latest.getObject().getJSONArray("artifacts").getJSONObject(0).getString("fileName");
+                                        mod.setFile(filename);
+                                        mod._save("file", filename);
+                                    }
+                                }
+                            }
                         }catch (Exception err){
                             err.printStackTrace();
                         }
@@ -338,6 +347,16 @@ public class ProjectActions {
                             if(mod.getBuild()!=build) {
                                 mod.setBuild(build);
                                 mod.setVersion(version);
+                                JsonNode latest = NewVersionCheck.getBuildInfo(mod,  mod.getBuild());
+                                if(latest.getObject().has("artifacts")) {
+                                    if(latest.getObject().getJSONArray("artifacts").length() > 0) {
+                                        if(latest.getObject().getJSONArray("artifacts").getJSONObject(0).has("fileName")) {
+                                            String filename = latest.getObject().getJSONArray("artifacts").getJSONObject(0).getString("fileName");
+                                            mod.setFile(filename);
+                                            mod._save("file", filename);
+                                        }
+                                    }
+                                }
                                 mod._save("build", build);
                             }
                         }catch (Exception e1){

@@ -192,6 +192,15 @@ public class NewVersionCheck implements Runnable {
 
                             m.setBuild(latestBuild);
 
+                            if(latest.getObject().has("artifacts")) {
+                                if(latest.getObject().getJSONArray("artifacts").length() > 0) {
+                                    if(latest.getObject().getJSONArray("artifacts").getJSONObject(0).has("fileName")) {
+                                        String filename = latest.getObject().getJSONArray("artifacts").getJSONObject(0).getString("fileName");
+                                        m._save("file", filename);
+                                    }
+                                }
+                            }
+
                             m._save("build", latestBuild);
 
                             if (!updated.contains(project))

@@ -31,8 +31,11 @@ public class Modules extends Model {
     @MediumIntegerColumn(length = 4)
     public int build;
 
-    @StringColumn(length=300)
+    @StringColumn(length=100)
     public String version;
+
+    @StringColumn(length=100)
+    public String file;
 
     @StringColumn(length=300)
     public String jenkinsUrl;
@@ -87,5 +90,13 @@ public class Modules extends Model {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 }

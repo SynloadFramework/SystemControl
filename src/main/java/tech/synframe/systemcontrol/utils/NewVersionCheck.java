@@ -90,7 +90,7 @@ public class NewVersionCheck implements Runnable {
         }
         return -1;
     }
-    public JsonNode getBuildInfo(Modules m, int build){
+    public static JsonNode getBuildInfo(Modules m, int build){
         String apiRequest = m.getJenkinsUrl();
         if(!apiRequest.endsWith("/")){
             apiRequest = apiRequest + "/";

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Nathaniel on 5/26/2016.
  */
-@SQLTable(name = "Modules", version = 0.2, description = "Modules running in the instances")
+@SQLTable(name = "Modules", version = 0.3, description = "Modules running in the instances")
 public class Modules extends Model {
 
 
@@ -30,6 +30,9 @@ public class Modules extends Model {
 
     @MediumIntegerColumn(length = 4)
     public int build;
+
+    @StringColumn(length=300)
+    public String version;
 
     @StringColumn(length=300)
     public String jenkinsUrl;
@@ -76,5 +79,13 @@ public class Modules extends Model {
 
     public void setProject(long project) {
         this.project = project;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

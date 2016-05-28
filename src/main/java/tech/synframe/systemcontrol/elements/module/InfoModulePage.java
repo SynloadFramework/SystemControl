@@ -49,7 +49,7 @@ public class InfoModulePage extends Response {
     }
     public String sha1(final File file){
         try {
-            final MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+            final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
                 final byte[] buffer = new byte[1024];
                 for (int read = 0; (read = is.read(buffer)) != -1; ) {

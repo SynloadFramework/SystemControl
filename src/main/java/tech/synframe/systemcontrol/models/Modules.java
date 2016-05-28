@@ -37,6 +37,9 @@ public class Modules extends Model {
     @StringColumn(length=100)
     public String file;
 
+    @StringColumn(length=100)
+    public String author;
+
     @StringColumn(length=300)
     public String jenkinsUrl;
 
@@ -98,5 +101,13 @@ public class Modules extends Model {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

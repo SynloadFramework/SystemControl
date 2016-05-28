@@ -317,12 +317,14 @@ public class ProjectActions {
                     String jenkinsUrl = (String) module.getValue().get("jenkins");
                     int build = Integer.valueOf((String)module.getValue().get("build"));
                     String modName = (String) module.getValue().get("module");
+                    String author = (String) module.getValue().get("author");
                     String version = (String) module.getValue().get("version");
                     if(!Modules._exists(Modules.class, "jenkinsUrl=? and project=?", jenkinsUrl, projectId)){
                         try {
                             Modules mod = new Modules();
                             mod.setJenkinsUrl(jenkinsUrl);
                             mod.setName(modName);
+                            mod.setAuthor(author);
                             mod.setVersion(version);
                             mod.setBuild(build);
                             mod._insert();
@@ -346,6 +348,7 @@ public class ProjectActions {
                             Modules mod = Modules._find(Modules.class, "jenkinsUrl=? and project=?", jenkinsUrl, projectId).exec(Modules.class).get(0);
                             if(mod.getBuild()!=build) {
                                 mod.setBuild(build);
+                                mod.setAuthor(author);
                                 mod.setVersion(version);
                                 JsonNode latest = NewVersionCheck.getBuildInfo(mod,  mod.getBuild());
                                 if(latest.getObject().has("artifacts")) {

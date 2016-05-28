@@ -19,7 +19,7 @@ public class InfoModulePage extends Response {
     public User user;
     public Project project = null;
     public Modules module = null;
-    public JsonNode info = null;
+    public String info = null;
     public InfoModulePage(WSHandler session, List<String> templateCache, User u, Project p, Modules m){
         boolean foundAttempt = false;
         this.setTemplateId("modinfo-sc"); // set the template id (stored client side)
@@ -33,7 +33,7 @@ public class InfoModulePage extends Response {
         user = u;
         project = p;
         module = m;
-        info = NewVersionCheck.getBuildInfo(module, m.getBuild());
+        info = NewVersionCheck.getBuildInfoString(module, m.getBuild());
         this.setParent(".projectAction-wrapper"); // parent element, css selector
         this.setParentTemplate("wrapper"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)
         this.setAction("alone"); // how to transition the element to the new content

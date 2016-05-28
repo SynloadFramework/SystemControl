@@ -104,6 +104,20 @@ public class NewVersionCheck implements Runnable {
         }
         return null;
     }
+    public static String getBuildInfoString(Modules m, int build){
+        String apiRequest = m.getJenkinsUrl();
+        if(!apiRequest.endsWith("/")){
+            apiRequest = apiRequest + "/";
+        }
+        apiRequest=apiRequest+build+"/api/json";
+        try {
+            //Log.info(Unirest.post(apiRequest).asString().getBody(),NewVersionCheck.class);
+            return Unirest.post(apiRequest).asString().getBody();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     public void deleteBuild(Modules m, Project p, JsonNode jn){
         if(jn.getObject().has("artifacts")){
             if(jn.getObject().getJSONArray("artifacts").length()>0) {

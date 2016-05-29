@@ -139,7 +139,7 @@ public class NewVersionCheck implements Runnable {
             if (!jenkinsUrl.endsWith("/")) {
                 jenkinsUrl = jenkinsUrl + "/";
             }
-            JsonNode response = Unirest.post(jenkinsUrl).asJson().getBody();
+            JsonNode response = Unirest.post(jenkinsUrl+"/api/json").asJson().getBody();
             int latestBuild = 0;
             if (response.getObject().has("builds")) {
                 if (response.getObject().getJSONArray("builds").length() > 0) {

@@ -13,6 +13,7 @@ import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
 import tech.synframe.systemcontrol.utils.NewVersionCheck;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,6 +42,49 @@ public class ModuleElements {
         }catch (Exception e1){
             e1.printStackTrace();
         }
+    }
+
+    @WSEvent(name="DeleteModule", description="", enabled = true, method = "delete", action = "module")
+    public void deleteModule(RequestEvent e){
+        HashMap<String, Object> objects = new HashMap<String, Object>();
+        try {
+            if (e.getSession().getSessionData().containsKey("user")
+                && e.getRequest().getData().containsKey("project")
+                && e.getRequest().getData().containsKey("module")
+            ){
+                User user = (User) e.getSession().getSessionData().get("user");
+                int moduleId = Integer.valueOf(e.getRequest().getData().get("module"));
+                List<Project> projects = Project._find(Project.class, "id=? and user=?", e.getRequest().getData().get("project"), user.getId()).exec(Project.class);
+                if(projects.size()>0){
+                    Modules mod = Modules._find(Modules.class,"id=?",moduleId).exec(Modules.class).get(0);
+                    if(new File(projects.get(0).getModulePath()+mod.getFile()).exists()){
+                        new File(projects.get(0).getModulePath()+mod.getFile()).delete();
+                        projects.get(0)._unset(mod);
+                        mod._delete();
+                        projects.get(0).stop();
+                        projects.get(0).start();
+                        objects.put("status", "success");
+                        objects.put("project", projects.get(0));
+                    }else{
+                        objects.put("status", "error");
+                        objects.put("error", "failed");
+                    }
+                }else{
+                    objects.put("status", "error");
+                    objects.put("error", "notexist");
+                }
+            }
+        }catch (Exception e1){
+            e1.printStackTrace();
+            objects.put("status", "error");
+            objects.put("error", "sqlerror");
+        }
+        e.respond(
+            new Data(
+                objects,
+                "addModule"
+            )
+        );
     }
 
     @WSEvent(method = "save", action = "addmodule", description = "add module to project", enabled = true, name = "StopProject")

@@ -134,6 +134,48 @@ public class NewVersionCheck implements Runnable {
             }
         }
     }
+    public static boolean downloadModuleAndInstall(Project p, String jenkinsUrl){
+        try {
+            if (!jenkinsUrl.endsWith("/")) {
+                jenkinsUrl = jenkinsUrl + "/";
+            }
+            JsonNode response = Unirest.post(jenkinsUrl).asJson().getBody();
+            int latestBuild = 0;
+            if (response.getObject().has("builds")) {
+                if (response.getObject().getJSONArray("builds").length() > 0) {
+                    if (response.getObject().getJSONArray("builds").getJSONObject(0).has("number")) {
+                        latestBuild = response.getObject().getJSONArray("builds").getJSONObject(0).getInt("number");
+                    }
+                }
+            }
+            JsonNode jn = Unirest.post(jenkinsUrl+latestBuild+"/api/json").asJson().getBody();
+            if (latestBuild!=0 && jn.getObject().has("artifacts")) {
+                if (jn.getObject().getJSONArray("artifacts").length() > 0) {
+                    try {
+                        String mPath = p.getModulePath();
+                        if (!mPath.endsWith("/")) {
+                            mPath = mPath + "/";
+                        }
+                        int number = jn.getObject().getInt("number");
+                        String downloadUrl = jenkinsUrl + number + "/artifact/" + jn.getObject().getJSONArray("artifacts").getJSONObject(0).getString("relativePath");
+                        String filename = jn.getObject().getJSONArray("artifacts").getJSONObject(0).getString("fileName");
+                        if (!(new File("./artifactCache/")).exists()) {
+                            (new File("./artifactCache/")).mkdir();
+                        }
+                        if (!(new File("./artifactCache/" + number + "-" + filename)).exists()) {
+                            FileUtils.copyURLToFile(new URL(downloadUrl), new File(mPath + filename));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
     public boolean downloadModule(Modules m, Project p, JsonNode jn){
         if(jn.getObject().has("artifacts")){
             if(jn.getObject().getJSONArray("artifacts").length()>0) {

@@ -1,6 +1,8 @@
 package tech.synframe.systemcontrol.handlers.ws;
 
 import com.synload.eventsystem.events.RequestEvent;
+import com.synload.framework.Log;
+import com.synload.framework.handlers.Data;
 import com.synload.framework.ws.annotations.WSEvent;
 import tech.synframe.systemcontrol.elements.module.AddModulePage;
 import tech.synframe.systemcontrol.elements.module.InfoModulePage;
@@ -9,6 +11,10 @@ import tech.synframe.systemcontrol.elements.project.ProjectDataPage;
 import tech.synframe.systemcontrol.models.Modules;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
+import tech.synframe.systemcontrol.utils.NewVersionCheck;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Nathaniel on 5/28/2016.
@@ -35,6 +41,51 @@ public class ModuleElements {
         }catch (Exception e1){
             e1.printStackTrace();
         }
+    }
+
+    @WSEvent(method = "save", action = "addmodule", description = "add module to project", enabled = true, name = "StopProject")
+    public void stop(RequestEvent e){
+        HashMap<String, Object> objects = new HashMap<String, Object>();
+        if(
+            e.getSession().getSessionData().containsKey("user")
+            && e.getRequest().getData().containsKey("project")
+            && e.getRequest().getData().containsKey("jenkinsurl")
+        ){
+            User u = (User) e.getSession().getSessionData().get("user");
+            int id = Integer.valueOf(e.getRequest().getData().get("project"));
+            String jenkinsUrl = e.getRequest().getData().get("jenkinsurl");
+            try{
+                final List<Project> project = Project._find(Project.class, "id=? and user=?", id, u.getId()).exec(Project.class);
+                if(project.size()>0) {
+                    Project proj = project.get(0);
+                    if(NewVersionCheck.downloadModuleAndInstall(proj, jenkinsUrl)) {
+                        proj.stop();
+                        proj.start();
+                        objects.put("status", "success");
+                        objects.put("project", project.get(0));
+                    }else{
+                        objects.put("status", "error");
+                        objects.put("error", "failed to retrieve module jar");
+                    }
+                }else{
+                    objects.put("status", "error");
+                    objects.put("error", "notexist");
+                }
+            }catch (Exception err){
+                objects.put("status", "error");
+                objects.put("error", "sqlerror");
+            }
+        }else{
+            Log.info("Not logged in", ProjectActions.class);
+            objects.put("status", "error");
+            objects.put("error", "notloggedin");
+        }
+        e.respond(
+            new Data(
+                objects,
+                "addModule"
+            )
+        );
     }
 
     @WSEvent(name="InfoModule", description="", enabled = true, method = "get", action = "infomodule")

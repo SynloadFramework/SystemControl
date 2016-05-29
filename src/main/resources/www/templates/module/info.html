@@ -1,1 +1,139 @@
-d
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Module {{module.name}}</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="panel-body">
+                            <h2>{{module.name}} v{{module.version}} ( Build {{module.build}} ) <small><a target="_blank" href="{{module.jenkinsUrl}}{{module.build}}/"><span class="glyphicon glyphicon-new-window"></span> Jenkins URL</a></small></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel-body">
+                            <a class="btn btn-default" href="javascript:;" onclick="_sf.request('get','projectdata',{'project':'{{project.id}}'});" role="button">Back</a>
+                            <a class="btn btn-danger deleteModuleButton" href="javascript:;" style="margin-left:10px;" role="button">Delete</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel-body builddescription-html">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel-body">
+                            <h4>Build Information</h4>
+                            <table class="table table-bordered" style="margin-bottom:0px;">
+                                <tr>
+                                    <td>Build Number</td>
+                                    <td>{{module.build}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Build Result</td>
+                                    <td class="buildresult-html"></td>
+                                </tr>
+                                <tr>
+                                    <td>Build Description</td>
+                                    <td class="description-html"></td>
+                                </tr>
+                                <tr>
+                                    <td>Build Date</td>
+                                    <td class="builddate-html"></td>
+                                </tr>
+                                <tr>
+                                    <td>Revision Hash</td>
+                                    <td class="buildhash-html"></td>
+                                </tr>
+                                <tr>
+                                    <td>Build Time</td>
+                                    <td class="buildduration-html"></td>
+                                </tr>
+                                <tr>
+                                    <td>Source</td>
+                                    <td class="buildSource-html"></td>
+                                </tr>
+                                <tr>
+                                    <td>Git Path</td>
+                                    <td class="buildgit-html"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel-body">
+                            <h4>Module Information</h4>
+                            <table class="table table-bordered" style="margin-bottom:0px;">
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{module.name}}</td>
+                                </tr>
+                                {{if module.name|equals>synloadframework}}{{else}}
+                                <tr>
+                                    <td>File</td>
+                                    <td>{{project.modulePath}}{{module.file}}</td>
+                                </tr>
+                                {{/if}}
+                                {{if hash|empty}}{{else}}
+                                <tr>
+                                    <td>Stored Module Hash</td>
+                                    <td class="modulehash-html">{{hash}}</td>
+                                </tr>
+                                {{/if}}
+                                <tr>
+                                    <td>Version</td>
+                                    <td>{{module.version}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Author</td>
+                                    <td>{{module.author}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+			var data = {{info}};
+			$(".deleteModuleButton").click(function(){
+				if(confirm('delete {{module.name}}?')){
+					_sf.action('delete','module',{'project':'{{project.id}}','module':'{{module.id}}'},function(data){
+						_sf.request('get','projectdata',{'project':'{{project.id}}'});
+					});
+				}
+			});
+			var a = new Date(data.timestamp);
+			var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+			var year = a.getFullYear();
+			var month = months[a.getMonth()];
+			var date = a.getDate();
+			var hour = a.getHours();
+			var min = a.getMinutes();
+			var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + ((min<10)?"0":"")+ min;
+			$(".builddate-html").html(time);
+			$.each(data.actions, function(k, v){
+				if(v.causes){
+					$(".description-html").html(v.causes[0].shortDescription);
+				}
+				if(v.lastBuiltRevision){
+					$(".buildhash-html").html(v.lastBuiltRevision.SHA1);
+				}
+				if(v.remoteUrls){
+					$(".buildgit-html").html(v.remoteUrls[0]);
+				}
+			});
+			var minutes = Math.floor((parseInt(data.duration)/1000)/60);
+			var seconds = (parseInt(data.duration)/1000)-minutes*60;
+			$(".buildduration-html").html(((minutes!=0)?minutes+" minutes ":"")+((seconds!=0)?seconds+" seconds":""));
+			$(".builddescription-html").html(((data.description)?data.description:"no description"));
+			$(".buildSource-html").html(data.changeSet.kind);
+			$(".buildresult-html").html(data.result);
+		</script>

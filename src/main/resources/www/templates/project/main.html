@@ -20,6 +20,7 @@
                         <td colspan="2">
                             <a href="javascript:;" class="btn btn-success startButton" style="display:none;width:100%;" onclick="startProject('{{project.id}}');">Start</a>
                             <a href="javascript:;" class="btn btn-danger stopButton" style="display:none;width:100%;" onclick="stopProject('{{project.id}}');">Stop</a>
+                            <a href="javascript:;" class="btn btn-info restartButton" style="display:none;width:100%;margin-top:10px;" onclick="restartProject('{{project.id}}');">Restart</a>
                         </td>
                     </tr>
                 </table>
@@ -73,6 +74,10 @@
                         <td class="connectedClients">{{project.clients}}</td>
                     </tr>
                     <tr>
+                        <td>Loaded Modules</td>
+                        <td class="loadedModules">0</td>
+                    </tr>
+                    <tr>
                         <td>Status</td>
                         <td class="running">
                             {{if project.running|equals>y}}<span class="label label-success">Running</span>{{else}}<span class="label label-danger">Stopped</span>{{/if}}
@@ -110,8 +115,10 @@
 					$('.connectedClients').html(data.p.project.clients);
 					var modulesHtml = "";
 					$.each(data.p.project.modules,function(i,v){
-						modulesHtml = modulesHtml +"<a href='javascript:;' class='list-group-item' onclick='loadModuleInfo('"+v+"','{{project.id}}');'>"+v+"</a>";
+						modulesHtml = modulesHtml +"<a href='javascript:;' class='list-group-item' onclick=\"_sf.request('get','infomodule',{'project':'{{project.id}}', 'name':'"+v[0]+"', 'build':'"+v[2]+"'});\">"+v[0]+" v"+v[3]+" ( Build "+v[2]+" )</a>";
 					});
+
+					$(".loadedModules").html(data.p.project.modules.length);
 					$('.modulesList').html(modulesHtml);
 					$('.running').html(((data.p.project.running=="y")?"<span class=\"label label-success\">Running</span>":"<span class=\"label label-danger\">Stopped</span>"));
 				}
@@ -119,9 +126,11 @@
 				if(data.p.project.running=="y"){
 					$(".startButton").hide();
 					$(".stopButton").show();
+					$(".restartButton").show();
 				}else{
 					$(".startButton").show();
 					$(".stopButton").hide();
+					$(".restartButton").hide();
 					$(".logInfo").html("");
 					lastlogid = 0;
 				}

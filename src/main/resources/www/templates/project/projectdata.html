@@ -27,8 +27,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">Modules Loaded</div>
             <div class="panel-body">
-                <div class="list-group modulesList" style="margin-bottom:0px;">
-                </div>
+                <div class="list-group modulesList" style="margin-bottom:0px;"></div>
+                <a href="javascript:;" class="btn btn-success moduleButton" style="width:100%;margin-top:10px;"><span class="glyphicon glyphicon-plus"></span> Add Module</a>
             </div>
         </div>
     </div>
@@ -44,6 +44,9 @@
     </div>
 </div>
 <script>
+			$(".moduleButton").click(function(){
+				_sf.request('get','addmodule',{'project':'{{project.id}}'});
+			});
 			if (typeof window.refreshLogTimeout !== 'undefined') {
 				clearTimeout(window.refreshLogTimeout);
 			}

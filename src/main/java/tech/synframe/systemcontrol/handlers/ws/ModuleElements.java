@@ -65,7 +65,7 @@ public class ModuleElements {
                         objects.put("project", project.get(0));
                     }else{
                         objects.put("status", "error");
-                        objects.put("error", "failed to retrieve module jar");
+                        objects.put("error", "failed");
                     }
                 }else{
                     objects.put("status", "error");

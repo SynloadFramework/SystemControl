@@ -164,11 +164,11 @@ public class NewVersionCheck implements Runnable {
                         }
                         if (!(new File("./artifactCache/" + number + "-" + filename)).exists()) {
                             FileUtils.copyURLToFile(new URL(downloadUrl), new File(mPath + filename));
+                            return true;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    return true;
                 }
             }
         }catch (Exception e){

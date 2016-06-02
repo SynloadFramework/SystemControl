@@ -57,7 +57,7 @@
     var jenkinsData = {{moduleList}};
     var html="";
     $.each(jenkinsData.jobs, function(k, v){
-        html='<option value="'+v.url+'">'+v.name+'</option>';
+        html=html+'<option value="'+v.url+'">'+v.name+'</option>';
     });
     $(".jenkinsSelectUrl").html(html);
     $(".jenkins").click(function(){

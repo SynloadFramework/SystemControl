@@ -1,11 +1,11 @@
 package tech.synframe.systemcontrol.elements.module;
 
+import com.mashape.unirest.http.Unirest;
 import com.synload.framework.handlers.Response;
 import com.synload.framework.modules.ModuleResource;
 import com.synload.framework.ws.WSHandler;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
-
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -15,6 +15,7 @@ import java.util.List;
 public class AddModulePage extends Response {
     public User user;
     public Project project = null;
+    public String moduleList;
     public AddModulePage(WSHandler session, List<String> templateCache, User u, Project p){
         boolean foundAttempt = false;
         this.setTemplateId("modadd-sc"); // set the template id (stored client side)
@@ -24,6 +25,11 @@ public class AddModulePage extends Response {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+        }
+        try {
+            moduleList = Unirest.post("http://ci.synload.com/view/Modules/api/json").asString().getBody();
+        }catch (Exception e){
+            e.printStackTrace();
         }
         user=u;
         project = p;

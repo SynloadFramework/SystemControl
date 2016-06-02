@@ -14,7 +14,7 @@
                     <div class="col-md-12">
                         <div class="panel-body">
                             <a class="btn btn-default" href="javascript:;" onclick="_sf.request('get','projectdata',{'project':'{{project.id}}'});" role="button">Back</a>
-                            <a class="btn btn-danger deleteModuleButton" href="javascript:;" style="margin-left:10px;" role="button">Delete</a>
+                            {{if module.name|equals>synloadframework}}{{else}}<a class="btn btn-danger deleteModuleButton" href="javascript:;" style="margin-left:10px;" role="button">Delete</a>{{/if}}
                         </div>
                     </div>
                 </div>

@@ -40,7 +40,9 @@ public class InfoModulePage extends Response {
             if(!path.endsWith("/")){
                 path=path+"/";
             }
-            hash = sha1(new File( path + module.getFile()));
+            if(new File( path + module.getFile()).exists()) {
+                hash = sha1(new File(path + module.getFile()));
+            }
         }
         this.setParent(".projectAction-wrapper"); // parent element, css selector
         this.setParentTemplate("wrapper"); // if element is not found, which template contains it. client side sends (method="get",action=ParentTemplate)

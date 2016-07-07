@@ -29,6 +29,7 @@ public class JavaArgs {
             if(projects.size()>0 && data.getSettingName().equalsIgnoreCase("javaArgs")){
                 Project p = projects.get(0);
                 p._save("java_arguments", data.getValue());
+                return true;
             }
         }catch(Exception e){}
         return false;

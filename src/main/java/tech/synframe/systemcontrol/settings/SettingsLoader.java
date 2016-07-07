@@ -2,8 +2,6 @@ package tech.synframe.systemcontrol.settings;
 
 import com.synload.framework.Log;
 import com.synload.framework.modules.ModuleLoader;
-import tech.synframe.systemcontrol.elements.project.ProjectSettingsPage;
-
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Map.Entry;
@@ -26,9 +24,9 @@ public class SettingsLoader {
                     if(m.getParameterTypes().length>0){
                         if(m.getParameterTypes()[0]==SettingData.class){
                             if(method == Setting.GET) {
-                                ProjectSettingsPage.addSetting(className, methodName, null, settingType, settingName);
+                                SettingRegistry.addSetting(className, methodName, null, settingType, settingName);
                             }else if(method == Setting.SET){
-                                ProjectSettingsPage.addSetting(className, null, methodName, settingType, settingName);
+                                SettingRegistry.addSetting(className, null, methodName, settingType, settingName);
                             }else{
                                 Log.error(className+":"+methodName+" ( Method incorrect )", SettingsLoader.class);
                             }

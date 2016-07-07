@@ -8,6 +8,7 @@ import tech.synframe.systemcontrol.elements.project.ProjectPage;
 import tech.synframe.systemcontrol.elements.project.ProjectSettingsPage;
 import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
+import tech.synframe.systemcontrol.settings.SettingRegistry;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ProjectSettings {
                     List<Project> projects = Project._find(Project.class, "user=? and id=?", user.getId(), projectId).exec(Project.class);
                     if (projects.size() == 1) {
                         for(int i=0;i<settings.length;i+=2) {
-                            ProjectSettingsPage.setValue(projects.get(0), settings[i], settings[i+1]);
+                            SettingRegistry.setValue(projects.get(0), settings[i], settings[i+1]);
                         }
                     }
                 } catch (Exception ex) {

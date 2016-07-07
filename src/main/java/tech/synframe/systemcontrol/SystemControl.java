@@ -9,7 +9,6 @@ import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.settings.SettingsLoader;
 import tech.synframe.systemcontrol.utils.NewVersionCheck;
 import tech.synframe.systemcontrol.utils.Queue;
-
 import java.util.List;
 
 /*

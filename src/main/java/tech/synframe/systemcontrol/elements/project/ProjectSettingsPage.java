@@ -7,6 +7,7 @@ import tech.synframe.systemcontrol.models.Project;
 import tech.synframe.systemcontrol.models.User;
 import tech.synframe.systemcontrol.settings.SettingRegistry;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +19,16 @@ import java.util.Map.Entry;
 public class ProjectSettingsPage extends Response {
     public User user;
     public Project project = null;
-    public HashMap<String, Map<String, String>> setting = new HashMap<String, Map<String, String>>();
+    public List<Map<String, String>> setting = new ArrayList<Map<String, String>>();
     public ProjectSettingsPage(WSHandler session, List<String> templateCache, Project p, User u){
         project = p;
         user = u;
         for(Entry<String, Map<String, String>> set : SettingRegistry.getSettings().entrySet()) {
             Map<String, String> indiSetting = new HashMap<String, String>();
             indiSetting.put("type", set.getValue().get("type"));
+            indiSetting.put("setting", set.getKey());
             indiSetting.put("value", SettingRegistry.getValue(p, set.getKey(), set.getValue()));
-            setting.put(set.getKey(), indiSetting);
+            setting.add(indiSetting);
         }
         this.setTemplateId("prjctsett-sc"); // set the template id (stored client side)
         if (!templateCache.contains(this.getTemplateId())) { // check to see if the client has this template

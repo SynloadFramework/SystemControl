@@ -48,7 +48,7 @@ public class SettingRegistry {
         Class c =  classLoader.loadClass(setting.get("getClass"));
         try {
             return (String) c.getMethod(setting.get("get"), c, SettingData.class).invoke(c.newInstance(), new SettingData(p.getId(), settingName));
-        }catch(Exception e){}
+        }catch(Exception e){ e.printStackTrace();}
         return "";
     }
     public static boolean setValue(Project p, String setting, String value){

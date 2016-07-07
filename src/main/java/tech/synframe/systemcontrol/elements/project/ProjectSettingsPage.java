@@ -26,7 +26,7 @@ public class ProjectSettingsPage extends Response {
         for(Entry<String, Map<String, String>> set : SettingRegistry.getSettings().entrySet()) {
             Map<String, String> indiSetting = new HashMap<String, String>();
             indiSetting.put("type", set.getValue().get("type"));
-            indiSetting.put("setting", set.getKey());
+            indiSetting.put("name", set.getKey());
             indiSetting.put("value", SettingRegistry.getValue(p, set.getKey(), set.getValue()));
             setting.add(indiSetting);
         }

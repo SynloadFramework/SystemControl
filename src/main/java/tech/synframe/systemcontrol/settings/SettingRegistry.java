@@ -47,7 +47,7 @@ public class SettingRegistry {
         ModuleLoader classLoader = (new ModuleLoader(Thread.currentThread().getContextClassLoader()));
         Class c =  classLoader.loadClass(setting.get("getClass"));
         try {
-            return (String) c.getMethod(setting.get("get"), c, SettingData.class).invoke(c.newInstance(), new SettingData(p.getId(), settingName));
+            return (String) c.getMethod(setting.get("get"), SettingData.class).invoke(c.newInstance(), new SettingData(p.getId(), settingName));
         }catch(Exception e){ e.printStackTrace();}
         return "";
     }
@@ -57,7 +57,7 @@ public class SettingRegistry {
             Map<String, String> sett = settings.get(setting);
             try {
                 Class c =  classLoader.loadClass(sett.get("setClass"));
-                c.getMethod(sett.get("set"), c, SettingData.class).invoke(c.newInstance(), new SettingData(p.getId(), setting, value));
+                c.getMethod(sett.get("set"), SettingData.class).invoke(c.newInstance(), new SettingData(p.getId(), setting, value));
             }catch(Exception e){}
         }
         return false;

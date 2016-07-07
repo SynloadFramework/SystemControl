@@ -17,16 +17,14 @@ public class SettingsLoader {
                 if(m.isAnnotationPresent(ProjectSetting.class)){
                     ProjectSetting ps = m.getAnnotation(ProjectSetting.class);
                     Setting method = ps.method();
-                    String settingName = ps.name();
-                    String settingType = ps.type();
                     String className = values.getValue().getName();
                     String methodName = m.getName();
                     if(m.getParameterTypes().length>0){
                         if(m.getParameterTypes()[0]==SettingData.class){
                             if(method == Setting.GET) {
-                                SettingRegistry.addSetting(className, methodName, null, settingType, settingName);
+                                SettingRegistry.addSetting(className, methodName, null, ps);
                             }else if(method == Setting.SET){
-                                SettingRegistry.addSetting(className, null, methodName, settingType, settingName);
+                                SettingRegistry.addSetting(className, null, methodName, ps);
                             }else{
                                 Log.error(className+":"+methodName+" ( Method incorrect )", SettingsLoader.class);
                             }

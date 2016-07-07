@@ -10,7 +10,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ProjectSetting {
-    String type();
+    String type() default "";
     String name();
     Setting method();
+    String label() default "";
+    String placeholder() default "";
 }

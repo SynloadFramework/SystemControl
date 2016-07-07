@@ -10,8 +10,8 @@ import java.util.Map;
  */
 public class SettingRegistry {
     private static Map<String, Map<String, String>> settings = new HashMap<String, Map<String, String>>();
-    public static boolean addSetting(String clazz, String getFunction, String setFunction, String type, String settingName){
-        if(!settings.containsKey(settingName)) {
+    public static boolean addSetting(String clazz, String getFunction, String setFunction, ProjectSetting ps){
+        if(!settings.containsKey(ps.name())) {
             Map<String, String> setting = new HashMap<String, String>();
             if(getFunction!=null) {
                 setting.put("get", getFunction);
@@ -21,11 +21,19 @@ public class SettingRegistry {
                 setting.put("set", setFunction);
                 setting.put("setClass", clazz);
             }
-            setting.put("type", type);
-            settings.put(settingName, setting);
+            if(!ps.type().equals("")) {
+                setting.put("type", ps.type());
+            }
+            if(!ps.placeholder().equals("")) {
+                setting.put("placeholder", ps.placeholder());
+            }
+            if(!ps.label().equals("")) {
+                setting.put("label", ps.label());
+            }
+            settings.put(ps.name(), setting);
             return true;
-        }else if(settings.containsKey(settingName)){
-            Map<String, String> sett = settings.get(settingName);
+        }else if(settings.containsKey(ps.name())){
+            Map<String, String> sett = settings.get(ps.name());
             if(getFunction!=null) {
                 sett.put("get", getFunction);
                 sett.put("getClass", clazz);
@@ -34,8 +42,8 @@ public class SettingRegistry {
                 sett.put("set", setFunction);
                 sett.put("setClass", clazz);
             }
-            sett.put("type", type);
-            settings.put(settingName, sett);
+            sett.put("type", ps.type());
+            settings.put(ps.name(), sett);
             return true;
         }
         return false;

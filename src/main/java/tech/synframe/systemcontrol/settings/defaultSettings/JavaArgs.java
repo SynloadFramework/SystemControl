@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Nathaniel on 7/6/2016.
  */
 public class JavaArgs {
-    @ProjectSetting(type="text",name="javaArgs",method= Setting.GET)
+    @ProjectSetting(type="text",name="javaArgs",method= Setting.GET,label="Java Arguments",placeholder="-Xmx1G")
     public String getJavaArgs(SettingData data){
         try {
             List<Project> projects = Project._find(Project.class, "id=?", Long.valueOf(data.getProjectId())).exec(Project.class);
@@ -22,7 +22,7 @@ public class JavaArgs {
         }catch(Exception e){}
         return "";
     }
-    @ProjectSetting(type="text",name="javaArgs",method= Setting.SET)
+    @ProjectSetting(type="text",name="javaArgs",method= Setting.SET,label="Java Arguments",placeholder="-Xmx1G")
     public boolean setJavaArgs(SettingData data){
         try {
             List<Project> projects = Project._find(Project.class, "id=?", Long.valueOf(data.getProjectId())).exec(Project.class);

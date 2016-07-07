@@ -18,12 +18,15 @@ import java.util.Map.Entry;
 public class ProjectSettingsPage extends Response {
     public User user;
     public Project project = null;
-    public HashMap<String, String[]> setting = new HashMap<String, String[]>();
+    public HashMap<String, Map<String, String>> setting = new HashMap<String, Map<String, String>>();
     public ProjectSettingsPage(WSHandler session, List<String> templateCache, Project p, User u){
         project = p;
         user = u;
         for(Entry<String, Map<String, String>> set : SettingRegistry.getSettings().entrySet()) {
-            setting.put(set.getKey(), new String[]{ SettingRegistry.getValue(p, set.getKey(), set.getValue()), set.getValue().get("type")});
+            Map<String, String> indiSetting = new HashMap<String, String>();
+            indiSetting.put("type", set.getValue().get("type"));
+            indiSetting.put("value", SettingRegistry.getValue(p, set.getKey(), set.getValue()));
+            setting.put(set.getKey(), indiSetting);
         }
         this.setTemplateId("prjctsett-sc"); // set the template id (stored client side)
         if (!templateCache.contains(this.getTemplateId())) { // check to see if the client has this template

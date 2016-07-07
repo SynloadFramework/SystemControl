@@ -17,7 +17,7 @@ import java.util.*;
  */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
-@SQLTable(name = "Project Model", version = 0.3, description = "Instances of synframe project")
+@SQLTable(name = "Project Model", version = 0.4, description = "Instances of synframe project")
 public class Project extends Model{
 
     public static Map<Long, Map<String, Object>> projectStatistics = new HashMap<Long, Map<String, Object>>();
@@ -66,6 +66,9 @@ public class Project extends Model{
     @HasOne(of=User.class, key="id")
     @MediumIntegerColumn(length = 20)
     public long user;
+
+    @StringColumn(length=300)
+    public String java_arguments;
 
     @MediumIntegerColumn(length = 1)
     public int autostart;
@@ -354,4 +357,11 @@ public class Project extends Model{
         this.autostart = autostart;
     }
 
+    public String getJava_arguments() {
+        return java_arguments;
+    }
+
+    public void setJava_arguments(String java_arguments) {
+        this.java_arguments = java_arguments;
+    }
 }

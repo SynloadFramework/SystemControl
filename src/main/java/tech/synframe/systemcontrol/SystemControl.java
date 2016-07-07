@@ -6,6 +6,7 @@ import com.synload.framework.modules.annotations.Module;
 import com.synload.framework.modules.annotations.Module.LogLevel;
 import tech.synframe.systemcontrol.models.PendingAction;
 import tech.synframe.systemcontrol.models.Project;
+import tech.synframe.systemcontrol.settings.SettingsLoader;
 import tech.synframe.systemcontrol.utils.NewVersionCheck;
 import tech.synframe.systemcontrol.utils.Queue;
 
@@ -38,6 +39,8 @@ public class SystemControl extends ModuleClass {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+		// READ ALL SETTINGS GETTERS AND SETTERS
+		SettingsLoader.readSettings();
 	}
 	@Override
 	public void crossTalk(Object... obj) {

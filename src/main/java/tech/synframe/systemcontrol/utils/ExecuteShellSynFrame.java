@@ -65,7 +65,8 @@ public class ExecuteShellSynFrame implements Runnable{
                 " -port "+this.project.getPort()+
                 " -cb 127.0.0.1:"+ SynloadFramework.serverTalkPort+"&"+SynloadFramework.serverTalkKey+
                 " -id "+this.project.getId()+
-                " -scb"
+                " -scb "+this.project.getJava_arguments()
+
             );
             File logDirectory = new File("./log");
             if(!logDirectory.exists()){

@@ -77,9 +77,14 @@ public class ExecuteShellSynFrame implements Runnable{
                     " -cb \"127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey + "\" " +
                     " -id " + this.project.getId() +
                     " -scb ";
-            Log.info(command, ExecuteShellSynFrame.class);
+            if(!(new File("./exec/")).exists()){
+                (new File("./exec/")).mkdir();
+            }
+            PrintWriter writ = new PrintWriter("./exec/start-"+this.project.getId()+".sh", "UTF-8");
+            writ.print(command);
+            writ.close();
             p = runtime.exec(
-                command
+                "./exec/start-"+this.project.getId()+".sh"
             );
             File logDirectory = new File("./log");
             if(!logDirectory.exists()){

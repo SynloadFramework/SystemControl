@@ -80,6 +80,7 @@ public class ExecuteShellSynFrame implements Runnable{
             if(!(new File("./exec/")).exists()){
                 (new File("./exec/")).mkdir();
             }
+            new File("./exec/start-"+this.project.getId()+".sh").delete();
             PrintWriter writ = new PrintWriter("./exec/start-"+this.project.getId()+".sh", "UTF-8");
             writ.print(command);
             writ.close();

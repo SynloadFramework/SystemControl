@@ -43,19 +43,17 @@ public class ProjectSettings {
     public void settingsSave(RequestEvent e){
         if(e.getSession().getSessionData().containsKey("user") && e.getRequest().getData().containsKey("project")){
             int projectId = Integer.valueOf(e.getRequest().getData().get("project"));
-            String[] settings = e.getRequest().getData().get("settings").split(",");
-            if(settings.length%2==0) {
-                User user = (User) e.getSession().getSessionData().get("user");
-                try {
-                    List<Project> projects = Project._find(Project.class, "user=? and id=?", user.getId(), projectId).exec(Project.class);
-                    if (projects.size() == 1) {
-                        for(int i=0;i<settings.length;i+=2) {
-                            SettingRegistry.setValue(projects.get(0), settings[i], settings[i+1]);
-                        }
+            String[] settings = e.getRequest().getData().get("_settings_").split(",");
+            User user = (User) e.getSession().getSessionData().get("user");
+            try {
+                List<Project> projects = Project._find(Project.class, "user=? and id=?", user.getId(), projectId).exec(Project.class);
+                if (projects.size() == 1) {
+                    for(int i=0;i<settings.length;i++) {
+                        SettingRegistry.setValue(projects.get(0), settings[i], e.getRequest().getData().get(settings[i]));
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }

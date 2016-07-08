@@ -69,16 +69,13 @@ public class ExecuteShellSynFrame implements Runnable{
                 }
                 jars=jars+"./lib/"+listOfFiles[i].getName();
             }
-            String command = "java -classpath \""+jars+"\" com.synload.framework.SynloadFramework " +
-                    project.getJava_arguments() +
-                    " -sitepath " + this.project.getPath() +
-                    " -port " + this.project.getPort() +
-                    " -cb 127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey +
-                    " -id " + this.project.getId() +
-                    " -scb ";
-            Log.info(command, ExecuteShellSynFrame.class);
             p = runtime.exec(
-                command
+                "java " + project.getJava_arguments() + " -classpath \""+jars+"\" com.synload.framework.SynloadFramework" +
+                " -sitepath " + this.project.getPath() +
+                " -port " + this.project.getPort() +
+                " -cb 127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey +
+                " -id " + this.project.getId() +
+                " -scb "
             );
             File logDirectory = new File("./log");
             if(!logDirectory.exists()){
@@ -89,6 +86,7 @@ public class ExecuteShellSynFrame implements Runnable{
                 String line = "";
                 int id = 0;
                 while((line = reader.readLine()) != null) {
+                    Log.info(line, ExecuteShellSynFrame.class);
                     id++;
                     writer.lines.add(line);
                     output.addLast(new ConsoleLine(line,id));

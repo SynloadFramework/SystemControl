@@ -59,13 +59,22 @@ public class ExecuteShellSynFrame implements Runnable{
             runtime = Runtime.getRuntime();
             LogWriter writer = new LogWriter();
             new Thread(writer).start();
+            String jars="";
+            File folder = new File("./lib/");
+            File[] listOfFiles = folder.listFiles();
+            for(int i=0;i<listOfFiles.length;i++){
+                if(!jars.equals("")){
+                    jars=jars+":";
+                }
+                jars=jars+listOfFiles[i].getName();
+            }
             p = runtime.exec(
-                "./bin/SynloadFramework"+
-                " -sitepath "+this.project.getPath()+
-                " -port "+this.project.getPort()+
-                " -cb 127.0.0.1:"+ SynloadFramework.serverTalkPort+"&"+SynloadFramework.serverTalkKey+
-                " -id "+this.project.getId()+
-                " -scb "+this.project.getJava_arguments()
+                "java "+ project.getJava_arguments() +" -classpath \""+jars+"\" com.synload.framework.SynloadFramework" +
+                " -sitepath " + this.project.getPath() +
+                " -port " + this.project.getPort() +
+                " -cb 127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey +
+                " -id " + this.project.getId() +
+                " -scb "
 
             );
             File logDirectory = new File("./log");

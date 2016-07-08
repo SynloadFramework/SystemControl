@@ -134,6 +134,10 @@
 				$('.project-wrapper').html('');
 				_sf.requestSingle('get','dashboard');
 			}
+			function restartProject(id){
+                stopProject(id);
+                startProject(id);
+            }
 			function startProject(id){
 				_sf.action('start','project',{
 					'id':id

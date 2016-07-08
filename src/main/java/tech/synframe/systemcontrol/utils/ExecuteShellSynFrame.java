@@ -65,7 +65,7 @@ public class ExecuteShellSynFrame implements Runnable{
             File[] listOfFiles = folder.listFiles();
             for(int i=0;i<listOfFiles.length;i++){
                 if(!jars.equals("")){
-                    jars=jars+":";
+                    jars="./lib/"+jars+":";
                 }
                 jars=jars+listOfFiles[i].getName();
             }

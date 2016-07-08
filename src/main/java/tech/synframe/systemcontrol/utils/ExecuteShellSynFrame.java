@@ -84,6 +84,7 @@ public class ExecuteShellSynFrame implements Runnable{
                 logDirectory.mkdir();
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader errors = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while(this.isRunning()) {
                 String line = "";
                 int id = 0;
@@ -96,6 +97,10 @@ public class ExecuteShellSynFrame implements Runnable{
                         output.removeFirst();
                     }
                 }
+            }
+            String line = "";
+            while((line = errors.readLine()) != null) {
+                Log.info(line, ExecuteShellSynFrame.class);
             }
             //Log.info(output.toString(), ExecuteShellSynFrame.class);
         } catch (Exception e) {

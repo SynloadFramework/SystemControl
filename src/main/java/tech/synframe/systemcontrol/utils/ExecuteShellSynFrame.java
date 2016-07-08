@@ -1,5 +1,6 @@
 package tech.synframe.systemcontrol.utils;
 
+import com.synload.framework.Log;
 import com.synload.framework.SynloadFramework;
 import tech.synframe.systemcontrol.models.Project;
 import java.io.*;
@@ -68,14 +69,15 @@ public class ExecuteShellSynFrame implements Runnable{
                 }
                 jars=jars+listOfFiles[i].getName();
             }
+            String command = "java "+ project.getJava_arguments() +" -classpath \""+jars+"\" com.synload.framework.SynloadFramework" +
+                    " -sitepath " + this.project.getPath() +
+                    " -port " + this.project.getPort() +
+                    " -cb 127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey +
+                    " -id " + this.project.getId() +
+                    " -scb ";
+            Log.info(command, ExecuteShellSynFrame.class);
             p = runtime.exec(
-                "java "+ project.getJava_arguments() +" -classpath \""+jars+"\" com.synload.framework.SynloadFramework" +
-                " -sitepath " + this.project.getPath() +
-                " -port " + this.project.getPort() +
-                " -cb 127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey +
-                " -id " + this.project.getId() +
-                " -scb "
-
+                command
             );
             File logDirectory = new File("./log");
             if(!logDirectory.exists()){

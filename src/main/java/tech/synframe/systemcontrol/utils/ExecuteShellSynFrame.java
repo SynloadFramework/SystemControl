@@ -15,8 +15,10 @@ public class ExecuteShellSynFrame implements Runnable{
     public Project project;
     public Process p;
     public Runtime runtime;
+    public boolean stopThread = true;
     public LinkedList<ConsoleLine> output = new LinkedList<ConsoleLine>();
     public static Map<Long, ExecuteShellSynFrame> instances = new HashMap<Long, ExecuteShellSynFrame>();
+    public Thread thread = null;
     public ExecuteShellSynFrame(Project project){
         this.project = project;
     }
@@ -30,7 +32,9 @@ public class ExecuteShellSynFrame implements Runnable{
     }
     public void stop(){
         if(p!=null) {
+            stopThread=false;
             p.destroy();
+            thread.interrupt();
         }
     }
     public class LogWriter implements Runnable{
@@ -56,6 +60,7 @@ public class ExecuteShellSynFrame implements Runnable{
         }
     }
     public void run(){
+        thread = Thread.currentThread();
         instances.put(this.project.getId(), this);
         //Log.info("started project", ExecuteShellSynFrame.class);
         try {
@@ -96,7 +101,7 @@ public class ExecuteShellSynFrame implements Runnable{
                 logDirectory.mkdir();
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while(this.isRunning()) {
+            while(stopThread) {
                 String line = "";
                 int id = 0;
                 while((line = reader.readLine()) != null) {
@@ -113,7 +118,9 @@ public class ExecuteShellSynFrame implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        instances.remove(this.project.getId());
+        if(instances.containsKey(this.project.getId())){
+            instances.remove(this.project.getId());
+        }
         //Log.info("stopped project", ExecuteShellSynFrame.class);
     }
 

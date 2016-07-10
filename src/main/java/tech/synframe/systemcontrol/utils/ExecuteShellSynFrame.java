@@ -16,7 +16,7 @@ public class ExecuteShellSynFrame implements Runnable{
     public Process p;
     public Thread logwriter;
     public Runtime runtime;
-    public boolean stopThread = true;
+    public boolean stopThread = false;
     public LinkedList<ConsoleLine> output = new LinkedList<ConsoleLine>();
     public static Map<Long, ExecuteShellSynFrame> instances = new HashMap<Long, ExecuteShellSynFrame>();
     public Thread thread = null;
@@ -33,7 +33,7 @@ public class ExecuteShellSynFrame implements Runnable{
     }
     public void stop(){
         if(p!=null) {
-            stopThread=false;
+            stopThread=true;
             logwriter.interrupt();
             p.destroy();
         }
@@ -41,7 +41,7 @@ public class ExecuteShellSynFrame implements Runnable{
     public class LogWriter implements Runnable{
         public LinkedList<String> lines = new LinkedList<String>();
         public void run(){
-            while(stopThread) {
+            while(!stopThread) {
                 if(lines.size()!=0) {
                     try {
                         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./log/" + project.getId() + ".log", true)));
@@ -105,12 +105,14 @@ public class ExecuteShellSynFrame implements Runnable{
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = "";
             int id = 0;
-            while((line = reader.readLine()) != null) {
-                id++;
-                writer.lines.add(line);
-                output.addLast(new ConsoleLine(line,id));
-                if(output.size()>50){
-                    output.removeFirst();
+            while(!stopThread) {
+                while ((line = reader.readLine()) != null) {
+                    id++;
+                    writer.lines.add(line);
+                    output.addLast(new ConsoleLine(line, id));
+                    if (output.size() > 50) {
+                        output.removeFirst();
+                    }
                 }
             }
             //Log.info(output.toString(), ExecuteShellSynFrame.class);

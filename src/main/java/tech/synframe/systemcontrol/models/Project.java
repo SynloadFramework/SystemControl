@@ -22,14 +22,26 @@ public class Project extends Model{
 
     public static Map<Long, Map<String, Object>> projectStatistics = new HashMap<Long, Map<String, Object>>();
 
+    public class StatusThread implements Runnable{
+        public void run(){
+            while(true) {
+                checkStatus();
+                try {
+                    Thread.sleep(100);
+                }catch (Exception e){
+
+                }
+            }
+        }
+    }
     public Project(ResultSet rs) {
         super(rs);
-        checkStatus();
+        new Thread(new StatusThread()).start();
     }
 
     public Project(Object... data) {
         super(data);
-        checkStatus();
+        new Thread(new StatusThread()).start();
     }
 
     public long freeMemory = -1;

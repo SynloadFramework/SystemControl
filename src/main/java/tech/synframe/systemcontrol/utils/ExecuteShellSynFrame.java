@@ -62,6 +62,7 @@ public class ExecuteShellSynFrame implements Runnable{
         }
     }
     public void run(){
+        Log.info("Started project "+this.project.getId(), ExecuteShellSynFrame.class);
         instances.put(this.project.getId(), this);
         //Log.info("started project", ExecuteShellSynFrame.class);
         try {
@@ -117,7 +118,9 @@ public class ExecuteShellSynFrame implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.info("Stopped project "+this.project.getId(), ExecuteShellSynFrame.class);
         if(instances.containsKey(this.project.getId())){
+            Log.info("Deleted instance of project "+this.project.getId(), ExecuteShellSynFrame.class);
             instances.remove(this.project.getId());
         }
         //Log.info("stopped project", ExecuteShellSynFrame.class);

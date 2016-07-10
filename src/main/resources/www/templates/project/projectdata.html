@@ -89,7 +89,7 @@
 					labels: [0]
 				}
 			});
-			var lastlogid = 0;
+			window.lastlogid = 0;
 			function refreshLog(){
 			    console.log(lastlogid);
 				_sf.action('log','project',{"id":"{{project.id}}","lastid":lastlogid},function(data){

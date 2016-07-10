@@ -80,12 +80,12 @@ public class ExecuteShellSynFrame implements Runnable{
                 }
                 jars=jars+directory+"/lib/"+listOfFiles[i].getName();
             }
-            String command = "java " + project.getJava_arguments() + " -classpath \""+jars+"\" com.synload.framework.SynloadFramework" +
-                    " -sitepath " + this.project.getPath() +
-                    " -port " + this.project.getPort() +
-                    " -cb \"127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey + "\" " +
-                    " -id " + this.project.getId() +
-                    " -scb ";
+            String command = "java " + project.getJava_arguments() + " -classpath "+'"'+"+jars+"+'"'+" com.synload.framework.SynloadFramework" +
+                " -sitepath " + this.project.getPath() +
+                " -port " + this.project.getPort() +
+                " -cb \"127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey + "\" " +
+                " -id " + this.project.getId() +
+                " -scb ";
             if(!(new File("./exec/")).exists()){
                 (new File("./exec/")).mkdir();
             }

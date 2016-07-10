@@ -91,12 +91,14 @@
 			});
 			var lastlogid = 0;
 			function refreshLog(){
+			    console.log(lastlogid);
 				_sf.action('log','project',{"id":"{{project.id}}","lastid":lastlogid},function(data){
 					console.log(data.p);
 					$.each(data.p.log, function(i, line){
 						if(line.id>lastlogid){
 							lastlogid = line.id;
 						}
+						console.log(lastlogid);
 						$(".logInfo").append(line.line+"\n");
 					});
 					if($(".notautoscroll").prop("checked")==true){

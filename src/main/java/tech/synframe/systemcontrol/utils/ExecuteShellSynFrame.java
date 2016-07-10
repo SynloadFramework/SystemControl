@@ -111,9 +111,10 @@ public class ExecuteShellSynFrame implements Runnable{
                     if(output.size()>50){
                         output.removeFirst();
                     }
+                    Log.info(String.valueOf(thread.getId())+" still alive!", ExecuteShellSynFrame.class);
                 }
+                Log.info(String.valueOf(thread.getId())+" outer loop!", ExecuteShellSynFrame.class);
             }
-            p.waitFor();
             //Log.info(output.toString(), ExecuteShellSynFrame.class);
         } catch (Exception e) {
             e.printStackTrace();

@@ -168,7 +168,21 @@ public class Project extends Model{
                             if(mod.getValue()==null){
                                 Log.info("error, property data for "+mod.getKey(), Project.class);
                             }else {
-                                modules.add(new Object[]{mod.getKey(), mod.getValue().getProperty("author"), mod.getValue().getProperty("build"), mod.getValue().getProperty("version"), mod.getValue().getProperty("jenkins")});
+                                Object[] newModData = new Object[]{mod.getKey(), mod.getValue().getProperty("author"), mod.getValue().getProperty("build"), mod.getValue().getProperty("version"), mod.getValue().getProperty("jenkins")};
+                                boolean exists = false;
+                                for(Object modData : modules){
+                                   if(mod.getKey().equals((String)((Object[])modData)[0])){
+                                       if(((Object[])modData).equals(newModData)) {
+                                           exists = true;
+                                       }else{
+                                           modules.remove(modData);
+                                       }
+                                       break;
+                                   }
+                                }
+                                if(!exists) {
+                                    modules.add(newModData);
+                                }
                             }
                         }
                     }

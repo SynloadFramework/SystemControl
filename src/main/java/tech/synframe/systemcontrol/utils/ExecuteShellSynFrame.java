@@ -91,14 +91,14 @@ public class ExecuteShellSynFrame implements Runnable{
             if(!(new File("./exec/")).exists()){
                 (new File("./exec/")).mkdir();
             }
-            new File("./exec/start-"+this.project.getId()+".sh").delete();
-            PrintWriter writ = new PrintWriter("./exec/start-"+this.project.getId()+".sh", "UTF-8");
+            new File("./exec/start-"+this.project.getId()).delete();
+            PrintWriter writ = new PrintWriter("./exec/start-"+this.project.getId(), "UTF-8");
             writ.print(command);
             writ.close();
-            Process proc = Runtime.getRuntime().exec( "chmod 755 ./exec/start-"+this.project.getId()+".sh" );
+            Process proc = Runtime.getRuntime().exec( "chmod 755 ./exec/start-"+this.project.getId() );
             proc.waitFor();
             p = runtime.exec(
-                "./exec/start-"+this.project.getId()+".sh"
+                "./exec/start-"+this.project.getId()
             );
             File logDirectory = new File("./log");
             if(!logDirectory.exists()){

@@ -33,17 +33,25 @@ public class SettingRegistry {
             settings.put(ps.name(), setting);
             return true;
         }else if(settings.containsKey(ps.name())){
-            Map<String, String> sett = settings.get(ps.name());
+            Map<String, String> setting = settings.get(ps.name());
             if(getFunction!=null) {
-                sett.put("get", getFunction);
-                sett.put("getClass", clazz);
+                setting.put("get", getFunction);
+                setting.put("getClass", clazz);
             }
             if(setFunction!=null) {
-                sett.put("set", setFunction);
-                sett.put("setClass", clazz);
+                setting.put("set", setFunction);
+                setting.put("setClass", clazz);
             }
-            sett.put("type", ps.type());
-            settings.put(ps.name(), sett);
+            if(!ps.type().equals("")) {
+                setting.put("type", ps.type());
+            }
+            if(!ps.placeholder().equals("")) {
+                setting.put("placeholder", ps.placeholder());
+            }
+            if(!ps.label().equals("")) {
+                setting.put("label", ps.label());
+            }
+            settings.put(ps.name(), setting);
             return true;
         }
         return false;

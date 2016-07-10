@@ -110,6 +110,7 @@ public class Queue implements Runnable {
             ExecuteShellSynFrame instance = ExecuteShellSynFrame.instances.get(project.getId());
             if(instance.isRunning()){
                 instance.stop();
+                ExecuteShellSynFrame.instances.remove(project.getId());
                 raiseEvent(project, "stop");
                 //Log.info("Stop project",Queue.class);
             }else{

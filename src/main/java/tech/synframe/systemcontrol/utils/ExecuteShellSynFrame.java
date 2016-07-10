@@ -29,7 +29,9 @@ public class ExecuteShellSynFrame implements Runnable{
         }
     }
     public void stop(){
-        p.destroy();
+        if(p!=null) {
+            p.destroy();
+        }
     }
     public class LogWriter implements Runnable{
         public LinkedList<String> lines = new LinkedList<String>();

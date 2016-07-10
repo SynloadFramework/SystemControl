@@ -1,8 +1,7 @@
 package tech.synframe.systemcontrol.models;
 
-import com.synload.framework.modules.annotations.sql.*;
+import com.synload.framework.sql.annotations.*;
 import com.synload.framework.sql.Model;
-
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;

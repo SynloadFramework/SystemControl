@@ -1,10 +1,7 @@
 package tech.synframe.systemcontrol.models;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.synload.framework.modules.annotations.sql.HasOne;
-import com.synload.framework.modules.annotations.sql.MediumIntegerColumn;
-import com.synload.framework.modules.annotations.sql.SQLTable;
-import com.synload.framework.modules.annotations.sql.StringColumn;
+import com.synload.framework.sql.annotations.*;
 import com.synload.framework.sql.Model;
 
 import java.sql.ResultSet;

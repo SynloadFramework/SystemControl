@@ -3,7 +3,7 @@ package tech.synframe.systemcontrol.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.synload.framework.Log;
-import com.synload.framework.modules.annotations.sql.*;
+import com.synload.framework.sql.annotations.*;
 import com.synload.framework.sql.Model;
 import tech.synframe.systemcontrol.utils.*;
 import tech.synframe.systemcontrol.utils.Queue;

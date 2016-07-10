@@ -199,6 +199,13 @@ public class Project extends Model{
                 modules = new ArrayList<Object>();
                 running="n";
             }
+        }else{
+            freeMemory=0;
+            totalMemory=0;
+            maxMemory=0;
+            clients=0;
+            modules = new ArrayList<Object>();
+            running="n";
         }
         try {
             File directory = new File(this.getPath());

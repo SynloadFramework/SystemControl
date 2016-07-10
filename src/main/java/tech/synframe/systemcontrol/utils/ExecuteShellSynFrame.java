@@ -31,11 +31,14 @@ public class ExecuteShellSynFrame implements Runnable{
             return true;
         }
     }
-    public void stop(){
-        //p.destroy();
-        stopThread=true;
-        logwriter.interrupt();
-
+    public boolean stop(){
+        if(p!=null) {
+            p.destroy();
+            stopThread = true;
+            logwriter.interrupt();
+            return true;
+        }
+        return false;
     }
     public class LogWriter implements Runnable{
         public LinkedList<String> lines = new LinkedList<String>();
@@ -105,7 +108,7 @@ public class ExecuteShellSynFrame implements Runnable{
             String line = "";
             int id = 0;
             while(!stopThread) {
-                while ((line = reader.readLine()) != null) {
+                while (!stopThread && (line = reader.readLine()) != null) {
                     id++;
                     writer.lines.add(line);
                     output.addLast(new ConsoleLine(line, id));

@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class ExecuteShellSynFrame implements Runnable{
     public Project project;
-    public Process p;
+    public Process p=null;
     public Thread logwriter;
     public Runtime runtime;
     public boolean stopThread = false;
@@ -32,7 +32,7 @@ public class ExecuteShellSynFrame implements Runnable{
         }
     }
     public void stop(){
-        p.destroy();
+        //p.destroy();
         stopThread=true;
         logwriter.interrupt();
 

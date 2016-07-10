@@ -34,7 +34,6 @@ public class ExecuteShellSynFrame implements Runnable{
         if(p!=null) {
             stopThread=false;
             p.destroy();
-            thread.interrupt();
         }
     }
     public class LogWriter implements Runnable{
@@ -111,9 +110,7 @@ public class ExecuteShellSynFrame implements Runnable{
                     if(output.size()>50){
                         output.removeFirst();
                     }
-                    Log.info(String.valueOf(thread.getId())+" still alive!", ExecuteShellSynFrame.class);
                 }
-                Log.info(String.valueOf(thread.getId())+" outer loop!", ExecuteShellSynFrame.class);
             }
             //Log.info(output.toString(), ExecuteShellSynFrame.class);
         } catch (Exception e) {

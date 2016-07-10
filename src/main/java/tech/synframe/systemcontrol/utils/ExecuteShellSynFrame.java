@@ -24,11 +24,15 @@ public class ExecuteShellSynFrame implements Runnable{
         this.project = project;
     }
     public boolean isRunning() {
-        try {
-            p.exitValue();
+        if(p!=null) {
+            try {
+                p.exitValue();
+                return false;
+            } catch (Exception e) {
+                return true;
+            }
+        }else{
             return false;
-        } catch (Exception e) {
-            return true;
         }
     }
     public boolean stop(){
@@ -127,6 +131,7 @@ public class ExecuteShellSynFrame implements Runnable{
         if(instances.containsKey(this.project.getId())){
             Log.info("Deleted instance of project "+this.project.getId(), ExecuteShellSynFrame.class);
             instances.remove(this.project.getId());
+            p=null;
         }
         //Log.info("stopped project", ExecuteShellSynFrame.class);
     }

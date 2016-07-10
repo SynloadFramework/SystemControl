@@ -82,7 +82,7 @@ public class ExecuteShellSynFrame implements Runnable{
                 }
                 jars=jars+directory+"/lib/"+listOfFiles[i].getName();
             }
-            String command = "java " + project.getJava_arguments() + " -classpath \""+jars+"\" com.synload.framework.SynloadFramework" +
+            String command = "exec java " + project.getJava_arguments() + " -classpath \""+jars+"\" com.synload.framework.SynloadFramework" +
                 " -sitepath " + this.project.getPath() +
                 " -port " + this.project.getPort() +
                 " -cb \"127.0.0.1:" + SynloadFramework.serverTalkPort + "&" + SynloadFramework.serverTalkKey + "\" " +

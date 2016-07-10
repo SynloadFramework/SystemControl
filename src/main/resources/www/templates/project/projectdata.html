@@ -91,14 +91,14 @@
 			});
 			window.lastlogid = 0;
 			function refreshLog(){
-			    console.log(lastlogid);
-				_sf.action('log','project',{"id":"{{project.id}}","lastid":lastlogid},function(data){
+			    console.log(window.lastlogid);
+				_sf.action('log','project',{"id":"{{project.id}}","lastid":window.lastlogid},function(data){
 					console.log(data.p);
 					$.each(data.p.log, function(i, line){
-						if(parseInt(line.id)>lastlogid){
-							lastlogid = parseInt(line.id);
+						if(parseInt(line.id)>window.lastlogid){
+							window.lastlogid = parseInt(line.id);
 						}
-						console.log(lastlogid);
+						console.log(window.lastlogid);
 						$(".logInfo").append(line.line+"\n");
 					});
 					if($(".notautoscroll").prop("checked")==true){

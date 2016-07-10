@@ -95,8 +95,8 @@ public class ExecuteShellSynFrame implements Runnable{
             PrintWriter writ = new PrintWriter("./exec/start-"+this.project.getId()+".sh", "UTF-8");
             writ.print(command);
             writ.close();
-            Process p = Runtime.getRuntime().exec( "chmod 755 ./exec/start-"+this.project.getId()+".sh" );
-            p.waitFor();
+            Process proc = Runtime.getRuntime().exec( "chmod 755 ./exec/start-"+this.project.getId()+".sh" );
+            proc.waitFor();
             p = runtime.exec(
                 "./exec/start-"+this.project.getId()+".sh"
             );

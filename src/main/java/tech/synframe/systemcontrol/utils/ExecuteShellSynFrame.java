@@ -14,6 +14,7 @@ import java.util.Map;
 public class ExecuteShellSynFrame implements Runnable{
     public Project project;
     public Process p;
+    public Thread logwriter;
     public Runtime runtime;
     public boolean stopThread = true;
     public LinkedList<ConsoleLine> output = new LinkedList<ConsoleLine>();
@@ -33,13 +34,14 @@ public class ExecuteShellSynFrame implements Runnable{
     public void stop(){
         if(p!=null) {
             stopThread=false;
+            logwriter.interrupt();
             p.destroy();
         }
     }
     public class LogWriter implements Runnable{
         public LinkedList<String> lines = new LinkedList<String>();
         public void run(){
-            while(true) {
+            while(stopThread) {
                 if(lines.size()!=0) {
                     try {
                         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./log/" + project.getId() + ".log", true)));
@@ -59,13 +61,13 @@ public class ExecuteShellSynFrame implements Runnable{
         }
     }
     public void run(){
-        thread = Thread.currentThread();
         instances.put(this.project.getId(), this);
         //Log.info("started project", ExecuteShellSynFrame.class);
         try {
             runtime = Runtime.getRuntime();
             LogWriter writer = new LogWriter();
-            new Thread(writer).start();
+            logwriter = new Thread(writer);
+            logwriter.start();
             String jars="";
             File folder = new File("./lib/");
             File[] listOfFiles = folder.listFiles();
@@ -100,16 +102,14 @@ public class ExecuteShellSynFrame implements Runnable{
                 logDirectory.mkdir();
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while(stopThread) {
-                String line = "";
-                int id = 0;
-                while((line = reader.readLine()) != null) {
-                    id++;
-                    writer.lines.add(line);
-                    output.addLast(new ConsoleLine(line,id));
-                    if(output.size()>50){
-                        output.removeFirst();
-                    }
+            String line = "";
+            int id = 0;
+            while((line = reader.readLine()) != null) {
+                id++;
+                writer.lines.add(line);
+                output.addLast(new ConsoleLine(line,id));
+                if(output.size()>50){
+                    output.removeFirst();
                 }
             }
             //Log.info(output.toString(), ExecuteShellSynFrame.class);

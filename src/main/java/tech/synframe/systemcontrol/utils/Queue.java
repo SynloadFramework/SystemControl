@@ -53,8 +53,8 @@ public class Queue implements Runnable {
                             case 2:
                                 stopProject(project);
                             break;
-                            case -1:
-                                //Log.error("action not found!", Queue.class);
+                            default:
+                                Log.error("action not found!", Queue.class);
                             break;
                         }
                     }else{
@@ -67,7 +67,7 @@ public class Queue implements Runnable {
             }
             //Log.info("test", Queue.class);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             }catch (Exception e){
                 e.printStackTrace();
             }

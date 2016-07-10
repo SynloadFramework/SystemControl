@@ -115,7 +115,9 @@ public class ExecuteShellSynFrame implements Runnable{
                     if (output.size() > 50) {
                         output.removeFirst();
                     }
+                    Thread.sleep(1);
                 }
+                Thread.sleep(10);
             }
             //Log.info(output.toString(), ExecuteShellSynFrame.class);
         } catch (Exception e) {

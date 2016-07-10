@@ -95,8 +95,8 @@
 				_sf.action('log','project',{"id":"{{project.id}}","lastid":lastlogid},function(data){
 					console.log(data.p);
 					$.each(data.p.log, function(i, line){
-						if(line.id>lastlogid){
-							lastlogid = line.id;
+						if(parseInt(line.id)>lastlogid){
+							lastlogid = parseInt(line.id);
 						}
 						console.log(lastlogid);
 						$(".logInfo").append(line.line+"\n");

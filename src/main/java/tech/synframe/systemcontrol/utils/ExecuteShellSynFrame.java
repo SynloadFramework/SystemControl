@@ -36,7 +36,6 @@ public class ExecuteShellSynFrame implements Runnable{
             stopThread=false;
             logwriter.interrupt();
             p.destroy();
-            p=null;
         }
     }
     public class LogWriter implements Runnable{

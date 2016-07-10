@@ -192,6 +192,11 @@ public class Project extends Model{
                 }
                 running="y";
             }else{
+                freeMemory=0;
+                totalMemory=0;
+                maxMemory=0;
+                clients=0;
+                modules = new ArrayList<Object>();
                 running="n";
             }
         }

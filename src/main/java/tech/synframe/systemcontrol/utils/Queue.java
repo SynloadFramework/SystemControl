@@ -93,8 +93,8 @@ public class Queue implements Runnable {
                 //Log.info("Already running",Queue.class);
             }else{
                 //ExecuteShellSynFrame.instances.remove(project.getId()); // remove existing instance
-                //new Thread(new ExecuteShellSynFrame(project)).start(); // start instance of project
-                //raiseEvent(project, "start");
+                new Thread(new ExecuteShellSynFrame(project)).start(); // start instance of project
+                raiseEvent(project, "start");
                 //Log.info("Start project",Queue.class);
             }
         }else{

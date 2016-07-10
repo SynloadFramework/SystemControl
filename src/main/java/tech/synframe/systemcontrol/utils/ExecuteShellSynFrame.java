@@ -32,9 +32,10 @@ public class ExecuteShellSynFrame implements Runnable{
         }
     }
     public void stop(){
+        p.destroy();
         stopThread=true;
         logwriter.interrupt();
-        p.destroy();
+
     }
     public class LogWriter implements Runnable{
         public LinkedList<String> lines = new LinkedList<String>();

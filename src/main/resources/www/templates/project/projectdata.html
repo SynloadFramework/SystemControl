@@ -89,22 +89,17 @@
 					labels: [0]
 				}
 			});
-			window.lastlogid = 0;
+			window.lastlogid=0;
 			function refreshLog(){
-			    console.log(window.lastlogid);
 				_sf.action('log','project',{"id":"{{project.id}}","lastid":window.lastlogid},function(data){
-					console.log(data.p);
 					$.each(data.p.log, function(i, line){
 						if(parseInt(line.id)>window.lastlogid){
 							window.lastlogid = parseInt(line.id);
+							$(".logInfo").append(line.line+"\n");
 						}
-						console.log(window.lastlogid);
-						$(".logInfo").append(line.line+"\n");
 					});
 					if($(".notautoscroll").prop("checked")==true){
-						$('.logInfo').animate({
-							scrollTop: $(".logInfo").offset().top
-						}, 300);
+						$('.logInfo').scrollTop($(".logInfo").prop("scrollHeight"));
 					}
 				});
 				window.refreshLogTimeout = setTimeout(function(){

@@ -1,3 +1,64 @@
-{{setting}}
-    {{.}} {{#}}
-{{/setting}}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Project Settings</div>
+            <div class="panel-body">
+                <form class="form-horizontal" action="javascript:;" method="post">
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" style="float:right;margin-left:10px;" class="btn btn-success saveRestartButtonProjectSettings">Save and restart</button>
+                            <button type="submit" style="float:right" class="btn btn-default saveButtonProjectSettings">Save</button>
+                            <button type="submit" class="btn btn-default backButtonProjectSettings">Back</button>
+                        </div>
+                    </div>
+                    {{setting}}
+                    <div class="form-group">
+                        <label for="projectSetting-{{name}}" class="col-sm-2 control-label">{{label}}</label>
+                        <div class="col-sm-10">
+                            {{if type|equals>text}}
+                            <input type="text" class="form-control projectSetting-{{name}}" id="projectSetting-{{name}}" value="{{value}}" placeholder="{{placeholder}}">
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/setting}}
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" style="float:right;margin-left:10px;" class="btn btn-success saveRestartButtonProjectSettings">Save and restart</button>
+                            <button type="submit" style="float:right" class="btn btn-default saveButtonProjectSettings">Save</button>
+                            <button type="submit" class="btn btn-default backButtonProjectSettings">Back</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+	var projectSettingsForm = "{{setting}}{{if #|equals>0}}{{else}},{{/if}}{{name}}{{/setting}}".split(",");
+	$(".backButtonProjectSettings").click(function(){
+		_sf.request('get','projectdata',{"project":"{{project.id}}"});
+	});
+	$(".saveButtonProjectSettings").click(function(){
+		var data = {
+			"_settings_":projectSettingsForm.join(","),
+			"project":"{{project.id}}"
+		};
+		$.each(projectSettingsForm, function(k,v){
+			data[v]=$(".projectSetting-"+v).val();
+		});
+		_sf.request('save','projectSettings',data);
+		_sf.request('get','projectdata',{"project":"{{project.id}}"});
+	});
+	$(".saveRestartButtonProjectSettings").click(function(){
+		var data = {
+			"_settings_":projectSettingsForm.join(","),
+			"project":"{{project.id}}"
+		};
+		$.each(projectSettingsForm, function(k,v){
+			data[v]=$(".projectSetting-"+v).val();
+		});
+		_sf.request('save','projectSettings',data);
+		_sf.request('get','projectdata',{"project":"{{project.id}}"});
+		restartProject('{{project.id}}');
+	});
+</script>

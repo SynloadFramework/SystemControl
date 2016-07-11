@@ -78,7 +78,6 @@ public class ExecuteShellSynFrame implements Runnable{
                     while (!stopThread && (line = reader.readLine()) != null) {
                         id++;
                         writer.lines.add(line);
-                        System.out.println(line);
                         output.addLast(new ConsoleLine(line, id));
                         if (output.size() > 50) {
                             output.removeFirst();

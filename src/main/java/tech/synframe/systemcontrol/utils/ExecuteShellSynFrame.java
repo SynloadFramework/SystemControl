@@ -66,6 +66,27 @@ public class ExecuteShellSynFrame implements Runnable{
             }
         }
     }
+    public class ErrorLogs implements Runnable{
+        public LinkedList<String> lines = new LinkedList<String>();
+        public void run(){
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            String line = "";
+            int id = 0;
+            try {
+                while (!stopThread) {
+                    while (!stopThread && (line = reader.readLine()) != null) {
+                        id++;
+                        output.addLast(new ConsoleLine(line, id));
+                        if (output.size() > 50) {
+                            output.removeFirst();
+                        }
+                        Thread.sleep(1);
+                    }
+                    Thread.sleep(10);
+                }
+            }catch (Exception e){}
+        }
+    }
     public void run(){
         Log.info("Started project "+this.project.getId(), ExecuteShellSynFrame.class);
         instances.put(this.project.getId(), this);
@@ -109,6 +130,7 @@ public class ExecuteShellSynFrame implements Runnable{
                 logDirectory.mkdir();
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            new Thread(new ErrorLogs()).start();
             String line = "";
             int id = 0;
             while(!stopThread) {

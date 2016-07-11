@@ -15,6 +15,7 @@ public class ExecuteShellSynFrame implements Runnable{
     public Project project;
     public Process p=null;
     public Thread logwriter;
+    public LogWriter writer = new LogWriter();
     public Runtime runtime;
     public boolean stopThread = false;
     public LinkedList<ConsoleLine> output = new LinkedList<ConsoleLine>();
@@ -76,6 +77,7 @@ public class ExecuteShellSynFrame implements Runnable{
                 while (!stopThread) {
                     while (!stopThread && (line = reader.readLine()) != null) {
                         id++;
+                        writer.lines.add(line);
                         System.out.println(line);
                         output.addLast(new ConsoleLine(line, id));
                         if (output.size() > 50) {
@@ -94,7 +96,6 @@ public class ExecuteShellSynFrame implements Runnable{
         //Log.info("started project", ExecuteShellSynFrame.class);
         try {
             runtime = Runtime.getRuntime();
-            LogWriter writer = new LogWriter();
             logwriter = new Thread(writer);
             logwriter.start();
             String jars="";

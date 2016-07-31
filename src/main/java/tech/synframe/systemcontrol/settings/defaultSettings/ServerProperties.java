@@ -38,7 +38,7 @@ public class ServerProperties {
     public String getServerPath(SettingData data){
         try {
             List<Project> projects = Project._find(Project.class, "id=?", Long.valueOf(data.getProjectId())).exec(Project.class);
-            if(projects.size()>0 && data.getSettingName().equalsIgnoreCase("serverPort")){
+            if(projects.size()>0 && data.getSettingName().equalsIgnoreCase("serverPath")){
                 Project p = projects.get(0);
                 return p.getPath();
             }

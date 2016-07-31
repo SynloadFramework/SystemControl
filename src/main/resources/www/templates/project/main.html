@@ -121,8 +121,8 @@
 					$('.totalMemory').html(Math.round(data.p.project.totalMemory/1024/1024)+" MB");
 					$('.freeMemory').html(Math.round(data.p.project.freeMemory/1024/1024)+" MB");
 					$('.maxMemory').html(Math.round(data.p.project.maxMemory/1024/1024)+" MB");
-					$('.wsSent').html(Math.round(data.p.project.wsSent/1024/1024)+" MB");
-					$('.wsReceive').html(Math.round(data.p.project.wsSent/1024/1024)+" MB");
+					$('.wsSent').html(Math.round(data.p.project.wsSent)+" B");
+					$('.wsReceive').html(Math.round(data.p.project.wsReceive)+" B");
 					$('.usedMemory').html(Math.round((data.p.project.totalMemory-data.p.project.freeMemory)/1024/1024)+" MB");
 
 					$('.connectedClients').html(data.p.project.clients);

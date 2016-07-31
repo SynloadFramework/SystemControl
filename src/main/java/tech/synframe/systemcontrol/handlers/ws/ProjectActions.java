@@ -309,6 +309,8 @@ public class ProjectActions {
             statistics.put("total", sd.getTotal());
             statistics.put("max", sd.getMax());
             statistics.put("clients", sd.getClients());
+            statistics.put("wsSent", sd.getWs_sent());
+            statistics.put("wsReceive", sd.getWs_receive());
             statistics.put("defaultPath", sd.getDefaultPath());
             statistics.put("instanceProperties", sd.getInstanceProperties());
             statistics.put("moduleProperties", sd.getModuleProperties());

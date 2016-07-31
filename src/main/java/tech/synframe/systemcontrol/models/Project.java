@@ -50,6 +50,8 @@ public class Project extends Model{
     public long totalSpace = -1;
     public long freeSpace = -1;
     public int clients = 0;
+    public long wsSent = 0;
+    public long wsReceive = 0;
     public String defaultPath = "";
     public String configPath = "";
     public String modulePath = "";
@@ -152,6 +154,12 @@ public class Project extends Model{
                     if(projectStatistics.get(this.getId()).containsKey("clients")){
                         clients = (Integer) projectStatistics.get(this.getId()).get("clients");
                     }
+                    if(projectStatistics.get(this.getId()).containsKey("wsSent")){
+                        wsSent = (Long) projectStatistics.get(this.getId()).get("wsSent");
+                    }
+                    if(projectStatistics.get(this.getId()).containsKey("wsReceive")){
+                        wsReceive = (Long) projectStatistics.get(this.getId()).get("wsReceive");
+                    }
                     if(projectStatistics.get(this.getId()).containsKey("defaultPath")) {
                         defaultPath = (String) projectStatistics.get(this.getId()).get("defaultPath");
                     }
@@ -195,6 +203,8 @@ public class Project extends Model{
                 freeMemory=0;
                 totalMemory=0;
                 maxMemory=0;
+                wsReceive=0;
+                wsSent=0;
                 clients=0;
                 modules = new ArrayList<Object>();
                 running="n";
@@ -203,6 +213,8 @@ public class Project extends Model{
             freeMemory=0;
             totalMemory=0;
             maxMemory=0;
+            wsReceive=0;
+            wsSent=0;
             clients=0;
             modules = new ArrayList<Object>();
             running="n";
@@ -401,5 +413,21 @@ public class Project extends Model{
 
     public void setJava_arguments(String java_arguments) {
         this.java_arguments = java_arguments;
+    }
+
+    public long getWsSent() {
+        return wsSent;
+    }
+
+    public void setWsSent(long wsSent) {
+        this.wsSent = wsSent;
+    }
+
+    public long getWsReceive() {
+        return wsReceive;
+    }
+
+    public void setWsReceive(long wsReceive) {
+        this.wsReceive = wsReceive;
     }
 }

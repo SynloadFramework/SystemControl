@@ -17,6 +17,7 @@ public class ExecuteShellSynFrame implements Runnable{
     public Thread logwriter;
     public LogWriter writer = new LogWriter();
     public Runtime runtime;
+    public int logPosition = 0;
     public boolean stopThread = false;
     public LinkedList<ConsoleLine> output = new LinkedList<ConsoleLine>();
     public static Map<Long, ExecuteShellSynFrame> instances = new HashMap<Long, ExecuteShellSynFrame>();
@@ -70,26 +71,28 @@ public class ExecuteShellSynFrame implements Runnable{
     public class ErrorLogs implements Runnable{
         public LinkedList<String> lines = new LinkedList<String>();
         private InputStreamReader isr = null;
-        public ErrorLogs(InputStreamReader isr){
+        public ExecuteShellSynFrame shell;
+        public ErrorLogs(InputStreamReader isr, ExecuteShellSynFrame shell){
+            this.shell = shell;
             this.isr = isr;
         }
         public void run(){
             BufferedReader reader = new BufferedReader(isr);
             String line = "";
-            int id = 0;
             try {
                 while (!stopThread) {
                     while (!stopThread && (line = reader.readLine()) != null) {
-                        id++;
-                        writer.lines.add(line);
+                        shell.setLogPosition(shell.getLogPosition()+1);
+                        shell.getWriter().lines.add(line);
                         System.out.println(line);
-                        output.addLast(new ConsoleLine(line, id));
-                        if (output.size() > 50) {
-                            output.removeFirst();
+                        shell.getOutput().addLast(new ConsoleLine(line, shell.getLogPosition()));
+                        if (shell.getOutput().size() > 50) {
+                            shell.getOutput().removeFirst();
                         }
-                        Thread.sleep(1);
+
+                        Thread.sleep(1L);
                     }
-                    Thread.sleep(10);
+                    Thread.sleep(1L);
                 }
             }catch (Exception e){}
         }
@@ -136,20 +139,19 @@ public class ExecuteShellSynFrame implements Runnable{
                 logDirectory.mkdir();
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            new Thread(new ErrorLogs(new InputStreamReader(p.getErrorStream()))).start();
+            new Thread(new ErrorLogs(new InputStreamReader(p.getErrorStream()), this)).start();
             String line = "";
-            int id = 0;
             while(!stopThread) {
                 while (!stopThread && (line = reader.readLine()) != null) {
-                    id++;
+                    logPosition++;
                     writer.lines.add(line);
-                    output.addLast(new ConsoleLine(line, id));
+                    output.addLast(new ConsoleLine(line, logPosition));
                     if (output.size() > 50) {
                         output.removeFirst();
                     }
-                    Thread.sleep(1);
+                    Thread.sleep(1L);
                 }
-                Thread.sleep(10);
+                Thread.sleep(1L);
             }
             //Log.info(output.toString(), ExecuteShellSynFrame.class);
         } catch (Exception e) {
@@ -202,5 +204,45 @@ public class ExecuteShellSynFrame implements Runnable{
 
     public void setOutput(LinkedList<ConsoleLine> output) {
         this.output = output;
+    }
+
+    public Thread getLogwriter() {
+        return logwriter;
+    }
+
+    public void setLogwriter(Thread logwriter) {
+        this.logwriter = logwriter;
+    }
+
+    public LogWriter getWriter() {
+        return writer;
+    }
+
+    public void setWriter(LogWriter writer) {
+        this.writer = writer;
+    }
+
+    public int getLogPosition() {
+        return logPosition;
+    }
+
+    public void setLogPosition(int logPosition) {
+        this.logPosition = logPosition;
+    }
+
+    public boolean isStopThread() {
+        return stopThread;
+    }
+
+    public void setStopThread(boolean stopThread) {
+        this.stopThread = stopThread;
+    }
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public void setThread(Thread thread) {
+        this.thread = thread;
     }
 }

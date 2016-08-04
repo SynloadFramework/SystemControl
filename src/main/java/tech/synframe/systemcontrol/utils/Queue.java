@@ -67,7 +67,7 @@ public class Queue implements Runnable {
             }
             //Log.info("test", Queue.class);
             try {
-                Thread.sleep(500);
+                Thread.sleep(3000);
             }catch (Exception e){
                 e.printStackTrace();
             }

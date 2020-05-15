@@ -94,7 +94,9 @@ public class ExecuteShellSynFrame implements Runnable{
                     }
                     Thread.sleep(1L);
                 }
-            }catch (Exception e){}
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
     public void run(){
